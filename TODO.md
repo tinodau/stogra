@@ -17,40 +17,39 @@ _Focus: Setting the foundation to prevent technical debt._
   - [x] Setup **TanStack Router** (File-based routing boilerplate).
   - [x] Setup **TanStack Query** (QueryClientProvider & Devtools).
 
-## 🟡 PHASE 2: UI Shell & Editorial Layout — NEXT
+## ✅ PHASE 2: UI Shell & Editorial Layout
 
 _Focus: Building the "face" of the application using mock data._
 
-> **Status:** Ready to implement. Dependencies: PHASE 1 & PHASE 4 completed.
+- [x] **Global Layout**
+  - [x] Implemented editorial grid in `App.tsx` (Main + Sidebar columns).
+  - [x] Navbar: Stogra Logo, Theme Toggle.
+- [x] **Hero Section**
+  - [x] Headlines using **Lora** font (Editorial style).
+  - [x] Large centered Search Bar with focus states.
+- [x] **Sidebar Components**
+  - [x] "Top Market Cap" widget (`TopMarketCap.tsx`).
+  - [x] "Daily Movers" widget (`DailyMovers.tsx`).
+- [x] **Stock Components**
+  - [x] `StockCard`: Displays Symbol, Name, Price, % Change, Sparkline.
+  - [x] `SparklineView`: Minimalist SVG chart with Teal/Red gradient.
+  - [x] Skeleton Loaders (`SkeletonCard`, `SkeletonSidebarItem`).
 
-- [ ] **Global Layout**
-  - [ ] Implement `MainLayout` with a 3-column Grid (Editorial Style).
-  - [ ] Navbar: Stogra Logo, Search Trigger (Mobile), Theme Toggle.
-- [ ] **Hero Section**
-  - [ ] Headlines using **Lora** font (Editorial style).
-  - [ ] Large centered Search Bar with prominent focus states.
-- [ ] **Sidebar Components**
-  - [ ] "Top Market Cap" widget (Simple list).
-  - [ ] "Daily Movers" widget (Green/Red indicators).
-- [ ] **Stock Components**
-  - [ ] `StockCard`: Displays Symbol, Name, Price, and % Change.
-  - [ ] `SparklineView`: Minimalist chart component (SVG/Canvas).
-  - [ ] Skeleton Loaders for all components above.
-
-## 🟠 PHASE 3: Frontend Logic (Mock Data Integration)
+## ✅ PHASE 3: Frontend Logic (Mock Data Integration)
 
 _Focus: Making the app functional using simulated data._
 
-- [ ] **Mock Service Layer**
-  - [ ] Create `mock-data.ts` containing a variety of US stocks (AAPL, TSLA, NVDA, etc.).
-  - [ ] Create API simulation functions with `delay` to test loading states.
-- [ ] **State Management**
-  - [ ] `useWatchlist` Hook: CRUD logic using **LocalStorage**.
-  - [ ] Implement **Search Debouncing** (300ms) in the Hero Search.
-- [ ] **Interactivity**
-  - [ ] "Add to Watchlist" logic from search results.
-  - [ ] "Remove" logic from watchlist.
-  - [ ] Theme switching (Sync between System OS and manual toggle).
+- [x] **Mock Service Layer**
+  - [x] Created `api/mock-data.ts` with 24 US stocks (AAPL, TSLA, NVDA, etc.).
+  - [x] API simulation functions with 300-500ms delay for realistic loading.
+- [x] **State Management**
+  - [x] `useWatchlist` Hook: LocalStorage CRUD + persistence.
+  - [x] `useSearch` Hook: 300ms debounce + TanStack Query.
+  - [x] `useMarketData` Hook: Polling (60s) + caching.
+- [x] **Interactivity**
+  - [x] "Add to Watchlist" from search dropdown.
+  - [x] "Remove" button on stock cards.
+  - [x] Theme switching (Light/Dark/System) with `useTheme` hook.
 
 ## 🔵 PHASE 4: Backend Engineering (FastAPI) — COMPLETED
 
