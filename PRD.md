@@ -23,7 +23,7 @@
 ### 4.1 Visual Identity
 
 - **Branding**: Stogra — focused, analytical, and graphic-centric.
-- **Typography**: **Geist** sans-serif family for a modern, engineering-precise feel.
+- **Typography**: **Plus Jakarta Sans** sans-serif family for a modern, engineering-precise feel.
 - **Theme Support**: Full **Dark Mode** and **Light Mode** compatibility.
 - **Color Palette**:
   - **Primary Accents**: Teal / Emerald Green for growth and primary actions.
@@ -47,7 +47,7 @@ The homepage is designed to drive immediate user intent:
 
 ## 6. Technical Stack
 
-- **Frontend**: React (Vite), Tailwind CSS, Shadcn UI, Geist Font.
+- **Frontend**: React (Vite), Tailwind CSS, Shadcn UI, Plus Jakarta Sans Font.
 - **Backend**: FastAPI (Python), `yfinance`.
 - **Deployment**:
   - Frontend: **Cloudflare Pages**.
