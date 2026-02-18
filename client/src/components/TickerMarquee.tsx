@@ -52,24 +52,35 @@ function TickerItem({ symbol, change }: TickerItemProps) {
   );
 }
 
+function TickerRow({
+  tickers,
+  direction,
+}: {
+  tickers: typeof TICKERS_ROW_1;
+  direction: "left" | "right";
+}) {
+  const doubled = [...tickers, ...tickers];
+
+  return (
+    <div className="ticker-row flex w-full">
+      <div
+        className={`flex shrink-0 items-center ${
+          direction === "left" ? "animate-marquee-left" : "animate-marquee-right"
+        }`}
+      >
+        {doubled.map((ticker, i) => (
+          <TickerItem key={i} symbol={ticker.symbol} change={ticker.change} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function TickerMarquee() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="ticker-row absolute top-[15%] flex">
-        <div className="animate-marquee-left flex shrink-0 items-center">
-          {[...TICKERS_ROW_1, ...TICKERS_ROW_1].map((ticker, i) => (
-            <TickerItem key={`row1-${i}`} symbol={ticker.symbol} change={ticker.change} />
-          ))}
-        </div>
-      </div>
-
-      <div className="ticker-row absolute bottom-[15%] flex">
-        <div className="animate-marquee-right flex shrink-0 items-center">
-          {[...TICKERS_ROW_2, ...TICKERS_ROW_2].map((ticker, i) => (
-            <TickerItem key={`row2-${i}`} symbol={ticker.symbol} change={ticker.change} />
-          ))}
-        </div>
-      </div>
+    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between overflow-hidden py-8">
+      <TickerRow tickers={TICKERS_ROW_1} direction="left" />
+      <TickerRow tickers={TICKERS_ROW_2} direction="right" />
     </div>
   );
 }
