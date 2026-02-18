@@ -388,6 +388,39 @@ Created `client/src/api/api.ts` with:
 | Datetime             | Focus                  | Key Outcome                                                |
 | -------------------- | ---------------------- | ---------------------------------------------------------- |
 | 2025-02-18 09:00 UTC | API service layer      | Created api.ts, unified service switching, build verified  |
+| 2025-02-18 09:15 UTC | Error boundaries       | Created ErrorBoundary component, wrapped main/aside sections|
+
+---
+
+## 2025-02-18 09:15 UTC: Error Boundary Implementation
+
+### Goal
+
+Gracefully handle JavaScript errors in component tree.
+
+### What Worked
+
+- **Class component for error boundary**: React requires class components for error boundaries
+- **Reset functionality**: "Try again" button resets error state
+- **Section isolation**: Wrapped main and aside separately so one section's error doesn't break the entire page
+
+### Implementation
+
+Created `client/src/components/ErrorBoundary.tsx`:
+
+```tsx
+export class ErrorBoundary extends Component<Props, State> {
+  static getDerivedStateFromError(error: Error): State
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo)
+  render() // Shows fallback UI with "Try again" button
+}
+```
+
+### Integration
+
+Wrapped in `App.tsx`:
+- Main content section (Watchlist, News, Earnings, Ratings, Dividends)
+- Sidebar section (MarketHours, Indices, Sectors, EarningsMini, TopMarketCap, DailyMovers)
 
 ---
 

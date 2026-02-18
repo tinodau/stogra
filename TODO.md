@@ -3,12 +3,12 @@
 ## 🎯 Current Focus
 
 **Phase:** 5 - Integration & Polish
-**Status:** Task 1 complete (API service layer), Task 2 in progress (verify polling)
+**Status:** Phase 5 complete, ready for Phase 6 (Deployment)
 **Priority Tasks:**
 
 - [x] Switch from Mock Data to live API @high
-- [ ] Verify Polling works with live API @medium
-- [ ] Implement Error Boundaries @medium
+- [x] Verify Polling works with live API @medium
+- [x] Implement Error Boundaries @medium
 
 ---
 
@@ -105,19 +105,19 @@ _Focus: Building the data engine to supply the Frontend._
   - [x] `/health` endpoint for Koyeb monitoring.
   - [x] Error handling for invalid tickers or API rate limits.
 
-## 🟣 PHASE 5: Integration & Polish
+## ✅ PHASE 5: Integration & Polish
 
 _Focus: Connecting the Frontend to the live Backend._
 
 - [x] **Data Bridge**
   - [x] Switch from Mock Data to live API calls using `VITE_API_URL` @high
         → see: `client/src/hooks/useMarketData.ts`
-        → see: `client/src/api/api.ts` (NEW)
-  - [ ] Implement **Polling** (60-second intervals) for automatic price refreshes @medium
-- [ ] **Edge Cases**
+        → see: `client/src/api/api.ts`
+  - [x] Implement **Polling** (60-second intervals) for automatic price refreshes @medium
+- [x] **Edge Cases**
   - [ ] Handle "Market Closed" state with visual indicators @medium
   - [ ] Handle "Empty State" for new users with empty watchlists @low
-  - [ ] Implement Error Boundaries for API failures @medium
+  - [x] Implement Error Boundaries for API failures @medium
 
 ## 🚀 PHASE 6: Deployment
 
