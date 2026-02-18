@@ -24,7 +24,7 @@ export const queryKeys = {
 export function useStock(symbol: string) {
   return useQuery<StockData | undefined>({
     queryKey: queryKeys.stock(symbol),
-    queryFn: () => mockApi.getStocks([symbol]).then(d => d[0]),
+    queryFn: () => mockApi.getStocks([symbol]).then((d) => d[0]),
     refetchInterval: 60 * 1000,
     staleTime: 60 * 1000,
     enabled: !!symbol,
@@ -33,6 +33,7 @@ export function useStock(symbol: string) {
 ```
 
 ### Key Defaults
+
 - `refetchInterval`: 60000ms (1 minute) for stock data
 - `staleTime`: 60000ms (1 minute) to prevent unnecessary refetches
 - `enabled`: Guard for dependent queries
@@ -46,13 +47,15 @@ export function useStock(symbol: string) {
 Always pair data components with skeleton variants:
 
 ```tsx
-{isLoading ? (
-  <SkeletonCard />
-) : data ? (
-  <StockCard stock={data} />
-) : (
-  <EmptyState />
-)}
+{
+  isLoading ? (
+    <SkeletonCard />
+  ) : data ? (
+    <StockCard stock={data} />
+  ) : (
+    <EmptyState />
+  );
+}
 ```
 
 ### Type-First Imports
@@ -84,6 +87,7 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
 ### Class Ordering
 
 Handled automatically by `prettier-plugin-tailwindcss`. Order:
+
 1. Layout (flex, grid, display)
 2. Spacing (p-, m-, gap-)
 3. Sizing (w-, h-, min-, max-)
@@ -97,7 +101,8 @@ Handled automatically by `prettier-plugin-tailwindcss`. Order:
 Always use CSS variables from `globals.css`:
 
 ```tsx
-className="bg-background text-foreground border-border rounded-[var(--radius)]"
+className =
+  "bg-background text-foreground border-border rounded-[var(--radius)]";
 ```
 
 ### Color Conditions

@@ -49,9 +49,7 @@ export function useWatchlist() {
   const toggle = useCallback((symbol: string) => {
     const upper = symbol.toUpperCase();
     setWatchlist((prev) =>
-      prev.includes(upper)
-        ? prev.filter((s) => s !== upper)
-        : [...prev, upper]
+      prev.includes(upper) ? prev.filter((s) => s !== upper) : [...prev, upper]
     );
   }, []);
 

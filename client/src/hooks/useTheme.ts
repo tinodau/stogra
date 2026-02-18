@@ -21,8 +21,7 @@ export function useTheme() {
     const root = document.documentElement;
     const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-    const isDarkMode =
-      theme === "dark" || (theme === "system" && systemDark);
+    const isDarkMode = theme === "dark" || (theme === "system" && systemDark);
 
     setIsDark(isDarkMode);
 

@@ -63,7 +63,7 @@ export function SearchBar({ onAdd }: SearchBarProps) {
       {/* Search Input */}
       <div className="relative">
         <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-          <Search className="h-5 w-5 text-muted-foreground" />
+          <Search className="text-muted-foreground h-5 w-5" />
         </div>
         <input
           ref={inputRef}
@@ -75,12 +75,12 @@ export function SearchBar({ onAdd }: SearchBarProps) {
           }}
           onFocus={() => setShowResults(true)}
           placeholder="Search stocks (e.g., AAPL, Tesla)..."
-          className="h-14 w-full rounded-[var(--radius)] border border-input bg-card pl-12 pr-12 text-lg shadow-sm transition-all placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
+          className="border-input bg-card placeholder:text-muted-foreground focus:border-ring focus:ring-ring/20 h-14 w-full rounded-[var(--radius)] border pr-12 pl-12 text-lg shadow-sm transition-all focus:ring-2 focus:outline-none"
         />
         {query && (
           <button
             onClick={handleClear}
-            className="absolute inset-y-0 right-4 flex items-center text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-4 flex items-center"
           >
             <X className="h-5 w-5" />
           </button>
@@ -89,28 +89,24 @@ export function SearchBar({ onAdd }: SearchBarProps) {
 
       {/* Search Results Dropdown */}
       {showResults && (query.trim() || results.length > 0) && (
-        <div className="absolute z-50 mt-2 w-full rounded-[var(--radius)] border border-border bg-card shadow-lg">
+        <div className="border-border bg-card absolute z-50 mt-2 w-full rounded-[var(--radius)] border shadow-lg">
           {isLoading ? (
-            <div className="p-4 text-center text-muted-foreground">
-              Searching...
-            </div>
+            <div className="text-muted-foreground p-4 text-center">Searching...</div>
           ) : results.length > 0 ? (
             <ul className="py-2">
               {results.map((result) => (
                 <li key={result.symbol}>
                   <button
                     onClick={() => handleSelect(result.symbol)}
-                    className="flex w-full items-center justify-between px-4 py-3 hover:bg-muted transition-colors text-left"
+                    className="hover:bg-muted flex w-full items-center justify-between px-4 py-3 text-left transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="font-mono font-semibold">
-                        {result.symbol}
-                      </span>
-                      <span className="text-sm text-muted-foreground truncate max-w-[200px]">
+                      <span className="font-mono font-semibold">{result.symbol}</span>
+                      <span className="text-muted-foreground max-w-[200px] truncate text-sm">
                         {result.name}
                       </span>
                     </div>
-                    <span className="text-xs text-muted-foreground uppercase">
+                    <span className="text-muted-foreground text-xs uppercase">
                       {result.exchange}
                     </span>
                   </button>
@@ -118,9 +114,7 @@ export function SearchBar({ onAdd }: SearchBarProps) {
               ))}
             </ul>
           ) : query.trim().length > 0 ? (
-            <div className="p-4 text-center text-muted-foreground">
-              No results found
-            </div>
+            <div className="text-muted-foreground p-4 text-center">No results found</div>
           ) : null}
         </div>
       )}

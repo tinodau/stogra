@@ -2,10 +2,10 @@ import { Sun, Moon, Laptop } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 
 export function ThemeToggle() {
-  const { theme, setLight, setDark, setSystem, isDark } = useTheme();
+  const { theme, setLight, setDark, setSystem } = useTheme();
 
   return (
-    <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-1">
+    <div className="border-border bg-card flex items-center gap-1 rounded-lg border p-1">
       <button
         onClick={setLight}
         className={`rounded-md p-2 transition-colors ${
@@ -53,7 +53,7 @@ export function ThemeToggleSimple() {
   return (
     <button
       onClick={toggle}
-      className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+      className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-md p-2 transition-colors"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}

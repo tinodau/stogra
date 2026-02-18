@@ -5,12 +5,7 @@ interface SparklineViewProps {
   width?: number;
 }
 
-export function SparklineView({
-  data,
-  isPositive,
-  height = 40,
-  width = 96,
-}: SparklineViewProps) {
+export function SparklineView({ data, isPositive, height = 40, width = 96 }: SparklineViewProps) {
   if (!data || data.length === 0) {
     return <div style={{ height, width }} className="bg-muted/50 rounded" />;
   }
@@ -31,9 +26,7 @@ export function SparklineView({
   });
 
   const pathD = `M ${points.join(" L ")}`;
-  const strokeColor = isPositive
-    ? "oklch(0.8545 0.1675 159.6564)"
-    : "oklch(0.6665 0.2111 2.8306)";
+  const strokeColor = isPositive ? "oklch(0.8545 0.1675 159.6564)" : "oklch(0.6665 0.2111 2.8306)";
   const fillGradientId = isPositive ? "spark-up" : "spark-down";
 
   return (

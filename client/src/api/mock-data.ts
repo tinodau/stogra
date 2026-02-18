@@ -38,10 +38,7 @@ export const MOCK_STOCKS: SearchResult[] = [
 ];
 
 // Generate sparkline data (7 data points trending in a direction)
-const generateSparkline = (
-  basePrice: number,
-  trend: "up" | "down" | "flat"
-): number[] => {
+const generateSparkline = (basePrice: number, trend: "up" | "down" | "flat"): number[] => {
   const points: number[] = [basePrice];
   let current = basePrice;
 
@@ -210,18 +207,14 @@ export const mockApi = {
     await delay(300); // Simulate network latency
     const q = query.toLowerCase();
     return MOCK_STOCKS.filter(
-      (s) =>
-        s.symbol.toLowerCase().includes(q) ||
-        s.name.toLowerCase().includes(q)
+      (s) => s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)
     ).slice(0, 5);
   },
 
   // Get stock data (single or multiple)
   async getStocks(symbols: string[]): Promise<StockData[]> {
     await delay(500);
-    return symbols
-      .map((sym) => MOCK_STOCK_DATA[sym.toUpperCase()])
-      .filter(Boolean);
+    return symbols.map((sym) => MOCK_STOCK_DATA[sym.toUpperCase()]).filter(Boolean);
   },
 
   // Get market snapshot

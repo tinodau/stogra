@@ -3,7 +3,7 @@
  * Fetches market snapshot and stock data using TanStack Query
  */
 
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { mockApi } from "@/api/mock-data";
 import type { StockData, MarketSnapshot } from "@/types";
 
@@ -49,7 +49,18 @@ export function useStocks(symbols: string[]) {
 
 // Get top market cap stocks
 export function useTopMarketCap(limit: number = 10) {
-  const topSymbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "BRK-B", "UNH", "JNJ", "XOM"];
+  const topSymbols = [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "NVDA",
+    "META",
+    "BRK-B",
+    "UNH",
+    "JNJ",
+    "XOM",
+  ];
   return useQuery<StockData[]>({
     queryKey: ["stocks", "top", limit],
     queryFn: () => mockApi.getStocks(topSymbols.slice(0, limit)),
