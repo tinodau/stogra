@@ -18,9 +18,9 @@ export function Footer() {
           </p>
 
           <div className="text-muted-foreground flex items-center gap-4 text-xs">
-            <span>© {year} Stogra</span>
-            <span>•</span>
-            <span>Tino Dau</span>
+            <span className="space-x-1">
+              <b>© {year} Stogra</b> by <b>Tino Dau</b>
+            </span>
           </div>
 
           <div className="text-muted-foreground flex items-center gap-1 text-xs">
