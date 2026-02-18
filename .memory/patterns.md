@@ -284,3 +284,49 @@ Prevent text overflow with truncation:
 // 1 col mobile, 2 cols tablet, 3 cols desktop
 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 ```
+
+### Stacked Mobile Layout
+
+Different layouts for mobile vs desktop using `sm:hidden` and `hidden sm:block`:
+
+```tsx
+<div className="flex items-center gap-2">
+  {/* Mobile: stacked layout */}
+  <div className="min-w-0 flex-1 sm:hidden">
+    <span className="font-semibold">{ticker}</span>
+    <span className="text-muted block text-xs">{company}</span>
+  </div>
+  <div className="text-right sm:hidden">
+    <span className="font-medium">{price}</span>
+    <span className="block text-xs">{change}</span>
+  </div>
+
+  {/* Desktop: single line with fixed widths */}
+  <div className="hidden w-14 shrink-0 sm:block">{ticker}</div>
+  <div className="hidden min-w-0 flex-1 sm:block">{company}</div>
+  <div className="hidden w-24 shrink-0 text-right sm:block">{price}</div>
+  <div className="hidden w-20 shrink-0 text-right sm:block">{change}</div>
+</div>
+```
+
+### Stock Logo Component
+
+Colored circle with 2-letter ticker:
+
+```tsx
+function StockLogo({ symbol }: { symbol: string }) {
+  const colors: Record<string, string> = {
+    NVDA: "bg-green-500",
+    AAPL: "bg-gray-600",
+    // ...
+  };
+
+  return (
+    <div
+      className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white ${colors[symbol] || "bg-muted-foreground"}`}
+    >
+      {symbol.slice(0, 2)}
+    </div>
+  );
+}
+```

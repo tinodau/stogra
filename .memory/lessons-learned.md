@@ -241,6 +241,49 @@ Container now controls size:
 
 ---
 
+## 2025-02-18 08:30 UTC: Stock List Redesign
+
+### Iterations
+
+1. **Sparkline removal** - Charts looked "floating" and asymmetrical, removed for cleaner look
+2. **Compact single-line** - Reduced padding, smaller fonts, all info on one line
+3. **Table layout** - Fixed column widths for consistent alignment
+4. **Final design** - Logo + stacked layout (mobile), fixed widths (desktop)
+
+### Final Layout
+
+**Mobile (stacked):**
+
+```
+●  NVDA              $726.13   +2.44%   ×
+   NVIDIA Corp
+```
+
+**Desktop (fixed widths):**
+
+```
+●  NVDA   NVIDIA Corp   $726.13   +2.44%   ×
+```
+
+### Component Changes
+
+| Old Component        | New Component   | Change                   |
+| -------------------- | --------------- | ------------------------ |
+| `StockCard.tsx`      | `StockList.tsx` | Merged into unified list |
+| `FeaturedStocks.tsx` | `StockList.tsx` | Replaced by unified list |
+
+### Column Widths (Desktop)
+
+| Column  | Width    |
+| ------- | -------- |
+| Logo    | `w-8`    |
+| Ticker  | `w-14`   |
+| Company | `flex-1` |
+| Price   | `w-24`   |
+| Change  | `w-20`   |
+
+---
+
 ## Session Log
 
 | Datetime             | Focus                   | Key Outcome                                                                 |
@@ -255,6 +298,7 @@ Container now controls size:
 | 2025-02-18 08:00 UTC | Mobile responsiveness   | Fixed horizontal scroll, consistent spacing, mobile-first all components    |
 | 2025-02-18 08:15 UTC | Hero/AnalystRatings fix | Centered indices, 2-column ratings grid                                     |
 | 2025-02-18 08:20 UTC | Sparkline fix           | Responsive viewBox, proper container sizing, consistent heights             |
+| 2025-02-18 08:30 UTC | Stock list redesign     | Removed sparklines, table layout, logo + stacked mobile layout              |
 
 ---
 
