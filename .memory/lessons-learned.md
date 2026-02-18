@@ -424,6 +424,49 @@ Wrapped in `App.tsx`:
 
 ---
 
+## 2025-02-18 09:30 UTC: Deployment Preparation
+
+### Goal
+
+Prepare all files and documentation for Koyeb + Cloudflare Pages deployment.
+
+### What Worked
+
+- **Comprehensive deployment guide**: Step-by-step instructions reduce deployment errors
+- **Environment templates**: `.env.example` files prevent accidental secret commits
+- **wrangler.toml**: Enables CI/CD via config file, not just dashboard
+
+### Files Created
+
+| File | Purpose |
+|------|---------|
+| `client/.env.example` | Frontend environment variable template |
+| `client/wrangler.toml` | Cloudflare Pages configuration |
+| `.docs/deployment.md` | Complete deployment guide (431 lines) |
+
+### Environment Variables Summary
+
+| Service | Variable | Purpose |
+|---------|----------|---------|
+| Frontend | `VITE_API_URL` | Backend API URL |
+| Backend | `ALLOWED_ORIGINS` | CORS allowed origins |
+| Backend | `ENV` | `production` |
+| Backend | `DEBUG` | `false` |
+
+### Deployment Architecture
+
+```
+User → Cloudflare Pages (Frontend) → Koyeb Tokyo (Backend) → yfinance
+```
+
+### Session Log Update
+
+| Datetime             | Focus                  | Key Outcome                                                |
+| -------------------- | ---------------------- | ---------------------------------------------------------- |
+| 2025-02-18 09:30 UTC | Deployment prep        | Created .env.example, wrangler.toml, deployment.md         |
+
+---
+
 ## To Update This File
 
 After each significant session, add:

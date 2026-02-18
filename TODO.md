@@ -2,13 +2,15 @@
 
 ## 🎯 Current Focus
 
-**Phase:** 5 - Integration & Polish
-**Status:** Phase 5 complete, ready for Phase 6 (Deployment)
+**Phase:** 6 - Deployment
+**Status:** Deployment preparation complete, ready to deploy
 **Priority Tasks:**
 
-- [x] Switch from Mock Data to live API @high
-- [x] Verify Polling works with live API @medium
-- [x] Implement Error Boundaries @medium
+- [ ] Deploy backend to Koyeb Tokyo @high
+- [ ] Deploy frontend to Cloudflare Pages @high
+- [ ] Update CORS with production URLs @medium
+
+**Docs:** → see: `.docs/deployment.md`
 
 ---
 
@@ -123,13 +125,18 @@ _Focus: Connecting the Frontend to the live Backend._
 
 _Focus: Going live._
 
+- [x] **Preparation**
+  - [x] Create `client/.env.example` template
+  - [x] Create `client/wrangler.toml` for Cloudflare Pages
+  - [x] Create `.docs/deployment.md` with step-by-step guide
 - [ ] **Backend Deployment**
-  - [ ] Build Docker Image @high
-        → see: `server/Dockerfile`
   - [ ] Deploy to **Koyeb Tokyo (NRT)** @high
+        → see: `server/Dockerfile`
 - [ ] **Frontend Deployment**
-  - [ ] Configure **Cloudflare Pages** @high
-  - [ ] Setup SSL and Production Environment Variables @medium
+  - [ ] Deploy to **Cloudflare Pages** @high
+        → see: `client/wrangler.toml`
+- [ ] **Post-Deploy**
+  - [ ] Update CORS with production URLs @medium
 
 ## 📈 PHASE 7: Market Expansion (Future)
 
