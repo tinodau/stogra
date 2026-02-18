@@ -6,6 +6,7 @@ Key technical decisions and their rationale.
 
 ## ADR-001: Decoupled Client-Server Architecture
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**
@@ -29,6 +30,7 @@ Frontend needs to be fast globally, backend needs to be close to data source for
 
 ## ADR-002: LocalStorage for Watchlist (Phase 1)
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**
@@ -52,6 +54,7 @@ Use browser LocalStorage for watchlist data, no backend database.
 
 ## ADR-003: OKLCH Color Space
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**
@@ -74,6 +77,7 @@ Use OKLCH color space for all theme colors via CSS variables.
 
 ## ADR-004: Mock Data First Development
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**
@@ -96,6 +100,7 @@ Build frontend with `mock-data.ts` service layer, swap to real API later.
 
 ## ADR-005: TanStack Query Over Redux
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**
@@ -118,6 +123,7 @@ Use TanStack Query for all server state. No global state manager.
 
 ## ADR-006: yfinance as Data Provider
 
+**Date:** 2025-02-18 06:51 UTC
 **Status:** Accepted
 
 **Context:**

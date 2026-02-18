@@ -185,3 +185,15 @@ When starting a new session:
 2. `.memory/lessons-learned.md` — Recent learnings
 3. `.memory/patterns.md` — Code conventions
 4. `.docs/api-contract.md` — API interface
+
+---
+
+## 10. Memory Files Maintenance
+
+**Important:** Always update `.memory/` files when:
+
+- Completing significant work → Update `lessons-learned.md`
+- Making architecture decisions → Add ADR to `decisions.md`
+- Establishing new code patterns → Update `patterns.md`
+
+**Format:** Use datetime in ISO format: `YYYY-MM-DD HH:MM UTC`

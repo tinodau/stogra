@@ -4,7 +4,7 @@ Session history and learnings for AI context continuity.
 
 ---
 
-## 2025-02-18: Initial Project Setup
+## 2025-02-18 06:51 UTC: Initial Project Setup
 
 ### What Worked
 - **Mock-first development**: Building frontend with mock data allowed rapid UI iteration without waiting for backend
@@ -32,16 +32,17 @@ Session history and learnings for AI context continuity.
 
 ## Session Log
 
-| Date | Focus | Key Outcome |
-|------|-------|-------------|
-| 2025-02-18 | Project exploration | Documented architecture, identified Phase 5-6 blockers |
+| Datetime | Focus | Key Outcome |
+|----------|-------|-------------|
+| 2025-02-18 06:51 UTC | Project exploration | Documented architecture, identified Phase 5-6 blockers |
 
 ---
 
 ## To Update This File
 
 After each significant session, add:
-1. Date and focus area
-2. What worked / didn't work
-3. Any API quirks or edge cases discovered
-4. UI decisions made iteratively
+1. **Datetime** (ISO format: `YYYY-MM-DD HH:MM UTC`)
+2. Focus area
+3. What worked / didn't work
+4. Any API quirks or edge cases discovered
+5. UI decisions made iteratively
