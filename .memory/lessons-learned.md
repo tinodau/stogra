@@ -368,27 +368,27 @@ Created `client/src/api/api.ts` with:
 
 ### Methods Added
 
-| Method                | Endpoint                      | Notes                              |
-| --------------------- | ----------------------------- | ---------------------------------- |
-| `search(query)`       | `/api/search?q=`              | Returns ticker suggestions         |
-| `getStocks(symbols)`  | `/api/stocks?symbols=`        | Batch stock data                   |
-| `getMarketSnapshot()` | `/api/market/snapshot`        | Indices + top movers               |
-| `getMarketStatus()`   | `/api/market/status`          | Open/closed status                 |
-| `getSectors()`        | `/api/market/sectors`         | Sector performance                 |
-| `getNews(limit)`      | `/api/market/news?limit=`     | Market news                        |
-| `getEarnings(limit)`  | `/api/market/earnings?limit=` | Earnings calendar                  |
-| `getAnalystRatings()` | `/api/market/ratings?limit=`  | Analyst ratings                    |
-| `getDividendStocks()` | `/api/market/dividends?limit=`| Dividend stocks (backend pending)  |
-| `getFeaturedNews()`   | `/api/market/news/featured`   | Featured story (backend pending)   |
-| `getWeekHighsLows()`  | `/api/market/week-highs-lows` | 52-week data (backend pending)     |
-| `getStocksBySector()` | Uses `getStocks()` internally | Client-side sector filtering       |
+| Method                | Endpoint                       | Notes                             |
+| --------------------- | ------------------------------ | --------------------------------- |
+| `search(query)`       | `/api/search?q=`               | Returns ticker suggestions        |
+| `getStocks(symbols)`  | `/api/stocks?symbols=`         | Batch stock data                  |
+| `getMarketSnapshot()` | `/api/market/snapshot`         | Indices + top movers              |
+| `getMarketStatus()`   | `/api/market/status`           | Open/closed status                |
+| `getSectors()`        | `/api/market/sectors`          | Sector performance                |
+| `getNews(limit)`      | `/api/market/news?limit=`      | Market news                       |
+| `getEarnings(limit)`  | `/api/market/earnings?limit=`  | Earnings calendar                 |
+| `getAnalystRatings()` | `/api/market/ratings?limit=`   | Analyst ratings                   |
+| `getDividendStocks()` | `/api/market/dividends?limit=` | Dividend stocks (backend pending) |
+| `getFeaturedNews()`   | `/api/market/news/featured`    | Featured story (backend pending)  |
+| `getWeekHighsLows()`  | `/api/market/week-highs-lows`  | 52-week data (backend pending)    |
+| `getStocksBySector()` | Uses `getStocks()` internally  | Client-side sector filtering      |
 
 ### Session Log Update
 
-| Datetime             | Focus                  | Key Outcome                                                |
-| -------------------- | ---------------------- | ---------------------------------------------------------- |
-| 2025-02-18 09:00 UTC | API service layer      | Created api.ts, unified service switching, build verified  |
-| 2025-02-18 09:15 UTC | Error boundaries       | Created ErrorBoundary component, wrapped main/aside sections|
+| Datetime             | Focus             | Key Outcome                                                  |
+| -------------------- | ----------------- | ------------------------------------------------------------ |
+| 2025-02-18 09:00 UTC | API service layer | Created api.ts, unified service switching, build verified    |
+| 2025-02-18 09:15 UTC | Error boundaries  | Created ErrorBoundary component, wrapped main/aside sections |
 
 ---
 
@@ -410,15 +410,16 @@ Created `client/src/components/ErrorBoundary.tsx`:
 
 ```tsx
 export class ErrorBoundary extends Component<Props, State> {
-  static getDerivedStateFromError(error: Error): State
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo)
-  render() // Shows fallback UI with "Try again" button
+  static getDerivedStateFromError(error: Error): State;
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo);
+  render(); // Shows fallback UI with "Try again" button
 }
 ```
 
 ### Integration
 
 Wrapped in `App.tsx`:
+
 - Main content section (Watchlist, News, Earnings, Ratings, Dividends)
 - Sidebar section (MarketHours, Indices, Sectors, EarningsMini, TopMarketCap, DailyMovers)
 
@@ -438,20 +439,20 @@ Prepare all files and documentation for Koyeb + Cloudflare Pages deployment.
 
 ### Files Created
 
-| File | Purpose |
-|------|---------|
-| `client/.env.example` | Frontend environment variable template |
-| `client/wrangler.toml` | Cloudflare Pages configuration |
-| `.docs/deployment.md` | Complete deployment guide (431 lines) |
+| File                   | Purpose                                |
+| ---------------------- | -------------------------------------- |
+| `client/.env.example`  | Frontend environment variable template |
+| `client/wrangler.toml` | Cloudflare Pages configuration         |
+| `.docs/deployment.md`  | Complete deployment guide (431 lines)  |
 
 ### Environment Variables Summary
 
-| Service | Variable | Purpose |
-|---------|----------|---------|
-| Frontend | `VITE_API_URL` | Backend API URL |
-| Backend | `ALLOWED_ORIGINS` | CORS allowed origins |
-| Backend | `ENV` | `production` |
-| Backend | `DEBUG` | `false` |
+| Service  | Variable          | Purpose              |
+| -------- | ----------------- | -------------------- |
+| Frontend | `VITE_API_URL`    | Backend API URL      |
+| Backend  | `ALLOWED_ORIGINS` | CORS allowed origins |
+| Backend  | `ENV`             | `production`         |
+| Backend  | `DEBUG`           | `false`              |
 
 ### Deployment Architecture
 
@@ -461,9 +462,9 @@ User → Cloudflare Pages (Frontend) → Koyeb Tokyo (Backend) → yfinance
 
 ### Session Log Update
 
-| Datetime             | Focus                  | Key Outcome                                                |
-| -------------------- | ---------------------- | ---------------------------------------------------------- |
-| 2025-02-18 09:30 UTC | Deployment prep        | Created .env.example, wrangler.toml, deployment.md         |
+| Datetime             | Focus           | Key Outcome                                        |
+| -------------------- | --------------- | -------------------------------------------------- |
+| 2025-02-18 09:30 UTC | Deployment prep | Created .env.example, wrangler.toml, deployment.md |
 
 ---
 

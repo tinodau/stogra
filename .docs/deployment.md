@@ -8,10 +8,10 @@ Complete step-by-step deployment guide for Stogra (Backend → Koyeb, Frontend �
 
 ### Required Accounts
 
-| Service | Purpose | Sign Up |
-|---------|---------|---------|
-| GitHub | Code repository | [github.com](https://github.com) |
-| Koyeb | Backend hosting | [koyeb.com](https://www.koyeb.com) |
+| Service    | Purpose          | Sign Up                                       |
+| ---------- | ---------------- | --------------------------------------------- |
+| GitHub     | Code repository  | [github.com](https://github.com)              |
+| Koyeb      | Backend hosting  | [koyeb.com](https://www.koyeb.com)            |
 | Cloudflare | Frontend hosting | [cloudflare.com](https://dash.cloudflare.com) |
 
 ### Required Tools
@@ -85,12 +85,12 @@ Repository: https://github.com/tinodau/stogra
 3. Authorize and select repository: `tinodau/stogra`
 4. Configure deployment settings:
 
-| Setting | Value |
-|---------|-------|
-| **Branch** | `main` |
-| **Region** | Tokyo (NRT) - `asia-northeast` |
-| **Instance Type** | Nano ($2.50/mo) |
-| **Port** | `8000` |
+| Setting           | Value                          |
+| ----------------- | ------------------------------ |
+| **Branch**        | `main`                         |
+| **Region**        | Tokyo (NRT) - `asia-northeast` |
+| **Instance Type** | Nano ($2.50/mo)                |
+| **Port**          | `8000`                         |
 
 ---
 
@@ -98,13 +98,14 @@ Repository: https://github.com/tinodau/stogra
 
 Koyeb will auto-detect the Dockerfile. Verify:
 
-| Setting | Value |
-|---------|-------|
-| **Build Method** | Dockerfile |
+| Setting             | Value               |
+| ------------------- | ------------------- |
+| **Build Method**    | Dockerfile          |
 | **Dockerfile Path** | `server/Dockerfile` |
-| **Docker Context** | `server` |
+| **Docker Context**  | `server`            |
 
 If auto-detection fails, set manually:
+
 - **Build path**: `server`
 - **Dockerfile**: `server/Dockerfile`
 
@@ -114,11 +115,11 @@ If auto-detection fails, set manually:
 
 In the Koyeb service configuration, add these environment variables:
 
-| Variable | Value | Notes |
-|----------|-------|-------|
+| Variable          | Value                                          | Notes                             |
+| ----------------- | ---------------------------------------------- | --------------------------------- |
 | `ALLOWED_ORIGINS` | `https://stogra.pages.dev,https://*.pages.dev` | Will update after frontend deploy |
-| `ENV` | `production` | Production mode |
-| `DEBUG` | `false` | Disable debug mode |
+| `ENV`             | `production`                                   | Production mode                   |
+| `DEBUG`           | `false`                                        | Disable debug mode                |
 
 **Note:** Start with `https://*.pages.dev` as wildcard to accept any Cloudflare Pages URL.
 
@@ -128,11 +129,11 @@ In the Koyeb service configuration, add these environment variables:
 
 In the service settings, configure health check:
 
-| Setting | Value |
-|---------|-------|
-| **Health Check Path** | `/health` |
-| **Health Check Interval** | 30s |
-| **Health Check Timeout** | 10s |
+| Setting                   | Value     |
+| ------------------------- | --------- |
+| **Health Check Path**     | `/health` |
+| **Health Check Interval** | 30s       |
+| **Health Check Timeout**  | 10s       |
 
 ---
 
@@ -178,14 +179,14 @@ curl https://stogra-api-xxx.koyeb.app/api/market/snapshot
 
 ### Step 2.2: Configure Build Settings
 
-| Setting | Value |
-|---------|-------|
-| **Production branch** | `main` |
-| **Project name** | `stogra` |
-| **Root directory** | `client` |
-| **Framework preset** | Vite |
-| **Build command** | `npm run build` |
-| **Build output directory** | `dist` |
+| Setting                    | Value           |
+| -------------------------- | --------------- |
+| **Production branch**      | `main`          |
+| **Project name**           | `stogra`        |
+| **Root directory**         | `client`        |
+| **Framework preset**       | Vite            |
+| **Build command**          | `npm run build` |
+| **Build output directory** | `dist`          |
 
 ---
 
@@ -196,8 +197,8 @@ Before the first deploy, set environment variables:
 1. Go to **Settings** → **Environment variables**
 2. Add **Production** variable:
 
-| Variable | Value |
-|----------|-------|
+| Variable       | Value                              |
+| -------------- | ---------------------------------- |
 | `VITE_API_URL` | `https://stogra-api-xxx.koyeb.app` |
 
 Replace `xxx` with your actual Koyeb subdomain.
@@ -223,6 +224,7 @@ If the project name is taken, Cloudflare will generate: `https://stogra-<random>
    - Console shows API calls to your Koyeb backend
 
 Open DevTools Console (F12) and check:
+
 - No CORS errors
 - API requests going to `VITE_API_URL`
 
@@ -242,6 +244,7 @@ ALLOWED_ORIGINS=https://stogra.pages.dev
 ```
 
 Or if using random subdomain:
+
 ```
 ALLOWED_ORIGINS=https://stogra-abc123.pages.dev
 ```
@@ -265,9 +268,9 @@ Test the full flow:
 
 ### Frontend (Cloudflare Pages)
 
-| Variable | Required | Example | Description |
-|----------|----------|---------|-------------|
-| `VITE_API_URL` | Yes | `https://stogra-api.koyeb.app` | Backend API base URL |
+| Variable       | Required | Example                        | Description          |
+| -------------- | -------- | ------------------------------ | -------------------- |
+| `VITE_API_URL` | Yes      | `https://stogra-api.koyeb.app` | Backend API base URL |
 
 Set in: Cloudflare Dashboard → Pages → Settings → Environment variables
 
@@ -275,11 +278,11 @@ Set in: Cloudflare Dashboard → Pages → Settings → Environment variables
 
 ### Backend (Koyeb)
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `ALLOWED_ORIGINS` | Yes | - | CORS allowed origins (comma-separated) |
-| `ENV` | No | `development` | Environment mode |
-| `DEBUG` | No | `true` | Enable debug mode |
+| Variable          | Required | Default       | Description                            |
+| ----------------- | -------- | ------------- | -------------------------------------- |
+| `ALLOWED_ORIGINS` | Yes      | -             | CORS allowed origins (comma-separated) |
+| `ENV`             | No       | `development` | Environment mode                       |
+| `DEBUG`           | No       | `true`        | Enable debug mode                      |
 
 Set in: Koyeb Console → Service → Configuration → Environment
 
@@ -329,6 +332,7 @@ Set in: Koyeb Console → Service → Configuration → Environment
 **Symptom**: Browser console shows CORS errors
 
 **Solution**:
+
 1. Check `ALLOWED_ORIGINS` in Koyeb includes your Pages URL
 2. Ensure no trailing slashes in URLs
 3. Redeploy backend after changing environment variables
@@ -340,6 +344,7 @@ Set in: Koyeb Console → Service → Configuration → Environment
 **Symptom**: API returns 500 Internal Server Error
 
 **Solution**:
+
 1. Check Koyeb logs for error details
 2. Common causes:
    - yfinance rate limiting (wait and retry)
@@ -353,6 +358,7 @@ Set in: Koyeb Console → Service → Configuration → Environment
 **Symptom**: Page loads but shows blank
 
 **Solution**:
+
 1. Check browser console for JavaScript errors
 2. Verify `VITE_API_URL` is set correctly
 3. Check build output in Cloudflare Pages logs
@@ -365,6 +371,7 @@ Set in: Koyeb Console → Service → Configuration → Environment
 **Symptom**: Changes to env vars don't take effect
 
 **Solution**:
+
 - **Cloudflare Pages**: Clear build cache and redeploy
 - **Koyeb**: Redeploy service after changing env vars
 
@@ -415,12 +422,12 @@ curl https://stogra.pages.dev
 
 ## Cost Estimate
 
-| Service | Plan | Monthly Cost |
-|---------|------|--------------|
-| Koyeb | Nano | $2.50/mo |
-| Cloudflare Pages | Free | $0/mo |
-| GitHub | Free | $0/mo |
-| **Total** | | **$2.50/mo** |
+| Service          | Plan | Monthly Cost |
+| ---------------- | ---- | ------------ |
+| Koyeb            | Nano | $2.50/mo     |
+| Cloudflare Pages | Free | $0/mo        |
+| GitHub           | Free | $0/mo        |
+| **Total**        |      | **$2.50/mo** |
 
 ---
 
