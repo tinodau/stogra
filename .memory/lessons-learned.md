@@ -34,6 +34,118 @@ Session history and learnings for AI context continuity.
 
 ---
 
+## 2025-02-18 07:10 UTC: Homepage Enhancement
+
+### What Worked
+
+- **Featured stocks for empty state**: Instead of showing empty watchlist, display trending stocks with "Add to Watchlist" buttons
+- **Sector filter tabs**: Quick pill-style buttons for filtering by sector
+- **Market status badge**: Real-time indicator in Hero shows market open/closed status
+- **Quick stats row**: Mini cards showing S&P 500, Nasdaq, Dow Jones in Hero section
+
+### New Components Created
+
+| Component               | Purpose                                               |
+| ----------------------- | ----------------------------------------------------- |
+| `FeaturedStocks.tsx`    | Grid of trending stocks with add-to-watchlist buttons |
+| `SectorFilter.tsx`      | Pill-style sector filter tabs                         |
+| `MarketHours.tsx`       | Market open/closed status with countdown              |
+| `SectorPerformance.tsx` | Bar chart showing sector gains/losses                 |
+| `Footer.tsx`            | Disclaimer and credits                                |
+
+### Mock Data Extended
+
+Added to `mock-data.ts`:
+
+- `MOCK_MARKET_STATUS` - Market open/closed state
+- `MOCK_SECTORS` - Sector performance data
+- `MOCK_FEATURED_NEWS` - Featured news item
+- `SECTOR_STOCKS` - Mapping of sectors to stock symbols
+- Extended `MOCK_STOCK_DATA` with AMD, NFLX, CRM, ADBE, INTC, MA, HD, CVX, KO, PFE, PG
+
+### UI Patterns
+
+- **Conditional rendering**: Show FeaturedStocks when watchlist empty, otherwise show Watchlist
+- **Grid layout**: `grid gap-4 sm:grid-cols-2 lg:grid-cols-3` for featured stocks
+- **Status badge**: Pill with animated pulse dot for open/closed state
+
+---
+
+## 2025-02-18 07:25 UTC: Content Expansion
+
+### What Worked
+
+- **Content sections as separate sections**: Each feature (News, Earnings, Ratings, Dividends) in its own `<section>` with consistent spacing
+- **Table layout for Earnings**: Clean table format with date, symbol, time, EPS columns
+- **Rating bars**: Visual progress bars showing analyst consensus (1-5 scale)
+- **Dividend grid**: 3-column grid showing yield prominently
+
+### New Components Created
+
+| Component              | Purpose                                       |
+| ---------------------- | --------------------------------------------- |
+| `MarketNews.tsx`       | News headlines with sentiment icons           |
+| `EarningsCalendar.tsx` | Table of upcoming earnings with EPS estimates |
+| `AnalystRatings.tsx`   | Rating bars with price targets and upside %   |
+| `DividendStocks.tsx`   | Grid of dividend stocks with yields           |
+| `EarningsMini.tsx`     | Compact sidebar version of earnings calendar  |
+
+### New Types Added
+
+```typescript
+interface NewsItem {
+  title;
+  summary;
+  source;
+  related_stocks;
+  sentiment;
+  category;
+}
+interface EarningEvent {
+  symbol;
+  date;
+  time;
+  expected_eps;
+}
+interface AnalystRating {
+  symbol;
+  rating;
+  rating_score;
+  target_price;
+  upside_percent;
+}
+interface DividendStock {
+  symbol;
+  dividend_yield;
+  annual_dividend;
+  payout_frequency;
+}
+interface WeekHighLow {
+  symbol;
+  week_high;
+  week_low;
+  is_new_high;
+  is_new_low;
+}
+```
+
+### Mock Data Extended
+
+- `MOCK_NEWS` - 6 news items with sentiment and categories
+- `MOCK_EARNINGS` - 8 upcoming earnings events
+- `MOCK_RATINGS` - 6 analyst ratings with targets
+- `MOCK_DIVIDENDS` - 6 dividend stocks with yields
+- `MOCK_WEEK_HIGHS` / `MOCK_WEEK_LOWS` - 52-week data
+
+### UI Patterns
+
+- **Section spacing**: `space-y-12` between main content sections
+- **Table styling**: `overflow-hidden rounded border` with `thead.bg-muted/50`
+- **Rating visualization**: Progress bar with color-coded fill based on rating
+- **Category badges**: Color-coded pills for news categories (earnings, market, company, economy)
+
+---
+
 ## Session Log
 
 | Datetime             | Focus                 | Key Outcome                                                                 |
@@ -41,6 +153,8 @@ Session history and learnings for AI context continuity.
 | 2025-02-18 06:51 UTC | Project exploration   | Documented architecture, identified Phase 5-6 blockers                      |
 | 2025-02-18 06:55 UTC | Workflow improvements | Added TODO priority tags, session workflow, file reference conventions      |
 | 2025-02-18 07:00 UTC | ESLint migration      | Migrated from `.eslintrc.json` to `eslint.config.js` (ESLint 9 flat config) |
+| 2025-02-18 07:10 UTC | Homepage enhancement  | Added Hero stats, FeaturedStocks, SectorFilter, MarketHours, Footer         |
+| 2025-02-18 07:25 UTC | Content expansion     | Added MarketNews, EarningsCalendar, AnalystRatings, DividendStocks          |
 
 ---
 

@@ -1,65 +1,96 @@
 import { useWatchlist } from "@/hooks/useWatchlist";
-import { useStocks, useMarketSnapshot } from "@/hooks/useMarketData";
+import { useStocks, useMarketSnapshot, useStocksBySector } from "@/hooks/useMarketData";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
 import { StockCard } from "@/components/StockCard";
+import { FeaturedStocks } from "@/components/FeaturedStocks";
+import { MarketNews } from "@/components/MarketNews";
+import { EarningsCalendar } from "@/components/EarningsCalendar";
+import { AnalystRatings } from "@/components/AnalystRatings";
+import { DividendStocks } from "@/components/DividendStocks";
 import { TopMarketCap } from "@/components/TopMarketCap";
 import { DailyMovers } from "@/components/DailyMovers";
+import { MarketHours } from "@/components/MarketHours";
+import { SectorPerformance } from "@/components/SectorPerformance";
+import { EarningsMini } from "@/components/EarningsMini";
+import { Footer } from "@/components/Footer";
 import { SkeletonCard, SkeletonSidebarItem } from "@/components/SkeletonCard";
 
 function App() {
   const { watchlist, remove, add } = useWatchlist();
   const { data: watchlistData, isLoading } = useStocks(watchlist);
   const { data: snapshot, isLoading: snapshotLoading } = useMarketSnapshot();
+  const { data: featuredStocks, isLoading: featuredLoading } = useStocksBySector("all");
 
   return (
-    <div className="bg-background min-h-screen font-sans antialiased">
+    <div className="bg-background flex min-h-screen flex-col font-sans antialiased">
       <Navbar />
 
-      {/* Hero Section */}
       <HeroSection onAddStock={add} />
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto flex-1 px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-          {/* Left Column - Watchlist */}
-          <main>
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-serif text-2xl font-semibold">Watchlist</h2>
-              {watchlist.length > 0 && (
-                <span className="text-muted-foreground text-sm">{watchlist.length} stocks</span>
-              )}
-            </div>
+          <main className="space-y-12">
+            {watchlist.length > 0 ? (
+              <section>
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="font-serif text-2xl font-semibold">Watchlist</h2>
+                  <span className="text-muted-foreground text-sm">{watchlist.length} stocks</span>
+                </div>
 
-            {isLoading ? (
-              <div className="space-y-4">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <SkeletonCard key={i} />
-                ))}
-              </div>
-            ) : watchlistData && watchlistData.length > 0 ? (
-              <div className="space-y-4">
-                {watchlistData.map((stock) => (
-                  <StockCard
-                    key={stock.symbol}
-                    stock={stock}
-                    onRemove={() => remove(stock.symbol)}
-                  />
-                ))}
-              </div>
+                {isLoading ? (
+                  <div className="space-y-4">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))}
+                  </div>
+                ) : watchlistData && watchlistData.length > 0 ? (
+                  <div className="space-y-4">
+                    {watchlistData.map((stock) => (
+                      <StockCard
+                        key={stock.symbol}
+                        stock={stock}
+                        onRemove={() => remove(stock.symbol)}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+              </section>
             ) : (
-              <div className="border-border bg-card rounded-[var(--radius)] border border-dashed p-12 text-center">
-                <p className="text-muted-foreground">
-                  Your watchlist is empty. Use the search above to add stocks.
-                </p>
-              </div>
+              <section>
+                {featuredLoading ? (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))}
+                  </div>
+                ) : featuredStocks ? (
+                  <FeaturedStocks stocks={featuredStocks} onAdd={add} />
+                ) : null}
+              </section>
             )}
+
+            <section>
+              <MarketNews />
+            </section>
+
+            <section>
+              <EarningsCalendar />
+            </section>
+
+            <section>
+              <AnalystRatings />
+            </section>
+
+            <section>
+              <DividendStocks />
+            </section>
           </main>
 
-          {/* Right Column - Sidebar */}
           <aside className="space-y-6">
-            {/* Market Indices */}
-            <div className="border-border bg-card rounded-[var(--radius)] border p-4">
+            <MarketHours />
+
+            <div className="border-border bg-card rounded-(--radius) border p-4">
               <h3 className="mb-4 font-serif text-lg font-semibold">Indices</h3>
               {snapshotLoading ? (
                 <div className="space-y-1">
@@ -92,11 +123,15 @@ function App() {
               ) : null}
             </div>
 
+            <SectorPerformance />
+            <EarningsMini />
             <TopMarketCap />
             <DailyMovers />
           </aside>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

@@ -5,13 +5,33 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { mockApi } from "@/api/mock-data";
-import type { StockData, MarketSnapshot } from "@/types";
+import type {
+  StockData,
+  MarketSnapshot,
+  MarketStatus,
+  Sector,
+  FeaturedNews,
+  NewsItem,
+  EarningEvent,
+  AnalystRating,
+  DividendStock,
+  WeekHighLow,
+} from "@/types";
 
 // Query keys
 export const queryKeys = {
   marketSnapshot: ["market", "snapshot"] as const,
+  marketStatus: ["market", "status"] as const,
+  sectors: ["market", "sectors"] as const,
+  featuredNews: ["market", "featuredNews"] as const,
+  news: ["market", "news"] as const,
+  earnings: ["market", "earnings"] as const,
+  ratings: ["market", "ratings"] as const,
+  dividends: ["market", "dividends"] as const,
+  weekHighsLows: ["market", "weekHighsLows"] as const,
   stock: (symbol: string) => ["stock", symbol] as const,
   stocks: (symbols: string[]) => ["stocks", symbols] as const,
+  stocksBySector: (sector: string) => ["stocks", "sector", sector] as const,
 };
 
 // Get market snapshot (indices + top movers)
@@ -74,5 +94,94 @@ export function useDailyMovers(limit: number = 5) {
     queryKey: ["stocks", "movers", limit],
     queryFn: () => mockApi.getStocks(["NVDA", "TSLA", "META", "AMD", "NFLX"]),
     refetchInterval: 60 * 1000,
+  });
+}
+
+// Get market status (open/closed)
+export function useMarketStatus() {
+  return useQuery<MarketStatus>({
+    queryKey: queryKeys.marketStatus,
+    queryFn: () => mockApi.getMarketStatus(),
+    refetchInterval: 60 * 1000,
+  });
+}
+
+// Get sector performance
+export function useSectors() {
+  return useQuery<Sector[]>({
+    queryKey: queryKeys.sectors,
+    queryFn: () => mockApi.getSectors(),
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+// Get featured news
+export function useFeaturedNews() {
+  return useQuery<FeaturedNews>({
+    queryKey: queryKeys.featuredNews,
+    queryFn: () => mockApi.getFeaturedNews(),
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+// Get stocks by sector
+export function useStocksBySector(sector: string) {
+  return useQuery<StockData[]>({
+    queryKey: queryKeys.stocksBySector(sector),
+    queryFn: () => mockApi.getStocksBySector(sector),
+    refetchInterval: 60 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+// Get market news
+export function useNews(limit: number = 6) {
+  return useQuery<NewsItem[]>({
+    queryKey: [...queryKeys.news, limit],
+    queryFn: () => mockApi.getNews(limit),
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+// Get earnings calendar
+export function useEarnings(limit: number = 8) {
+  return useQuery<EarningEvent[]>({
+    queryKey: [...queryKeys.earnings, limit],
+    queryFn: () => mockApi.getEarnings(limit),
+    refetchInterval: 60 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
+  });
+}
+
+// Get analyst ratings
+export function useAnalystRatings(limit: number = 6) {
+  return useQuery<AnalystRating[]>({
+    queryKey: [...queryKeys.ratings, limit],
+    queryFn: () => mockApi.getAnalystRatings(limit),
+    refetchInterval: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+// Get dividend stocks
+export function useDividendStocks(limit: number = 6) {
+  return useQuery<DividendStock[]>({
+    queryKey: [...queryKeys.dividends, limit],
+    queryFn: () => mockApi.getDividendStocks(limit),
+    refetchInterval: 60 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
+  });
+}
+
+// Get 52-week highs/lows
+export function useWeekHighsLows() {
+  return useQuery<{ highs: WeekHighLow[]; lows: WeekHighLow[] }>({
+    queryKey: queryKeys.weekHighsLows,
+    queryFn: () => mockApi.getWeekHighsLows(),
+    refetchInterval: 60 * 1000,
+    staleTime: 30 * 1000,
   });
 }
