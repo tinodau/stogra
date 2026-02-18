@@ -3,11 +3,12 @@
 ## 🎯 Current Focus
 
 **Phase:** 5 - Integration & Polish
-**Status:** Homepage UI complete, ready for API integration
+**Status:** Task 1 complete (API service layer), Task 2 in progress (verify polling)
 **Priority Tasks:**
 
-- Switch from Mock Data to live API @high
-- Implement Polling @medium
+- [x] Switch from Mock Data to live API @high
+- [ ] Verify Polling works with live API @medium
+- [ ] Implement Error Boundaries @medium
 
 ---
 
@@ -108,10 +109,10 @@ _Focus: Building the data engine to supply the Frontend._
 
 _Focus: Connecting the Frontend to the live Backend._
 
-- [ ] **Data Bridge**
-  - [ ] Switch from Mock Data to live API calls using `VITE_API_URL` @high
+- [x] **Data Bridge**
+  - [x] Switch from Mock Data to live API calls using `VITE_API_URL` @high
         → see: `client/src/hooks/useMarketData.ts`
-        → see: `client/src/api/mock-data.ts`
+        → see: `client/src/api/api.ts` (NEW)
   - [ ] Implement **Polling** (60-second intervals) for automatic price refreshes @medium
 - [ ] **Edge Cases**
   - [ ] Handle "Market Closed" state with visual indicators @medium

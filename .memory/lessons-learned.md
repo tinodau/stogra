@@ -346,6 +346,51 @@ Adapt mock data types to match yfinance capabilities.
 
 ---
 
+## 2025-02-18 09:00 UTC: API Service Layer Integration
+
+### Goal
+
+Create unified API service that switches between real backend and mock data.
+
+### What Worked
+
+- **Conditional service selection**: `const service = isUsingRealApi ? api : mockApi` allows seamless switching
+- **Type-safe API layer**: All endpoints have proper TypeScript return types
+- **Graceful fallbacks**: When `VITE_API_URL` is not set, API returns empty/mock data
+
+### Implementation
+
+Created `client/src/api/api.ts` with:
+
+- `apiFetch<T>()` helper for typed fetch calls
+- `isUsingRealApi` flag based on `VITE_API_URL` env var
+- All methods matching `mockApi` interface
+
+### Methods Added
+
+| Method                | Endpoint                      | Notes                              |
+| --------------------- | ----------------------------- | ---------------------------------- |
+| `search(query)`       | `/api/search?q=`              | Returns ticker suggestions         |
+| `getStocks(symbols)`  | `/api/stocks?symbols=`        | Batch stock data                   |
+| `getMarketSnapshot()` | `/api/market/snapshot`        | Indices + top movers               |
+| `getMarketStatus()`   | `/api/market/status`          | Open/closed status                 |
+| `getSectors()`        | `/api/market/sectors`         | Sector performance                 |
+| `getNews(limit)`      | `/api/market/news?limit=`     | Market news                        |
+| `getEarnings(limit)`  | `/api/market/earnings?limit=` | Earnings calendar                  |
+| `getAnalystRatings()` | `/api/market/ratings?limit=`  | Analyst ratings                    |
+| `getDividendStocks()` | `/api/market/dividends?limit=`| Dividend stocks (backend pending)  |
+| `getFeaturedNews()`   | `/api/market/news/featured`   | Featured story (backend pending)   |
+| `getWeekHighsLows()`  | `/api/market/week-highs-lows` | 52-week data (backend pending)     |
+| `getStocksBySector()` | Uses `getStocks()` internally | Client-side sector filtering       |
+
+### Session Log Update
+
+| Datetime             | Focus                  | Key Outcome                                                |
+| -------------------- | ---------------------- | ---------------------------------------------------------- |
+| 2025-02-18 09:00 UTC | API service layer      | Created api.ts, unified service switching, build verified  |
+
+---
+
 ## To Update This File
 
 After each significant session, add:
