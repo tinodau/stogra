@@ -1,10 +1,12 @@
 /**
  * useMarketData Hook
  * Fetches market snapshot and stock data using TanStack Query
+ * Uses real API when VITE_API_URL is set, otherwise falls back to mock data
  */
 
 import { useQuery } from "@tanstack/react-query";
 import { mockApi } from "@/api/mock-data";
+import { api, isUsingRealApi } from "@/api/api";
 import type {
   StockData,
   MarketSnapshot,
@@ -17,6 +19,9 @@ import type {
   DividendStock,
   WeekHighLow,
 } from "@/types";
+
+// Unified API that switches between real and mock
+const service = isUsingRealApi ? api : mockApi;
 
 // Query keys
 export const queryKeys = {
@@ -38,7 +43,7 @@ export const queryKeys = {
 export function useMarketSnapshot() {
   return useQuery<MarketSnapshot>({
     queryKey: queryKeys.marketSnapshot,
-    queryFn: () => mockApi.getMarketSnapshot(),
+    queryFn: () => service.getMarketSnapshot(),
     refetchInterval: 5 * 60 * 1000, // 5 minutes
     staleTime: 60 * 1000, // 1 minute
   });
@@ -49,7 +54,7 @@ export function useStock(symbol: string) {
   return useQuery<StockData | undefined>({
     queryKey: queryKeys.stock(symbol),
     queryFn: async () => {
-      const data = await mockApi.getStocks([symbol]);
+      const data = await service.getStocks([symbol]);
       return data[0];
     },
     refetchInterval: 60 * 1000, // 1 minute
@@ -61,7 +66,7 @@ export function useStock(symbol: string) {
 export function useStocks(symbols: string[]) {
   return useQuery<StockData[]>({
     queryKey: queryKeys.stocks(symbols),
-    queryFn: () => mockApi.getStocks(symbols),
+    queryFn: () => service.getStocks(symbols),
     refetchInterval: 60 * 1000, // 1 minute
     enabled: symbols.length > 0,
   });
@@ -83,7 +88,7 @@ export function useTopMarketCap(limit: number = 10) {
   ];
   return useQuery<StockData[]>({
     queryKey: ["stocks", "top", limit],
-    queryFn: () => mockApi.getStocks(topSymbols.slice(0, limit)),
+    queryFn: () => service.getStocks(topSymbols.slice(0, limit)),
     refetchInterval: 60 * 1000,
   });
 }
@@ -92,7 +97,7 @@ export function useTopMarketCap(limit: number = 10) {
 export function useDailyMovers(limit: number = 5) {
   return useQuery<StockData[]>({
     queryKey: ["stocks", "movers", limit],
-    queryFn: () => mockApi.getStocks(["NVDA", "TSLA", "META", "AMD", "NFLX"]),
+    queryFn: () => service.getStocks(["NVDA", "TSLA", "META", "AMD", "NFLX"]),
     refetchInterval: 60 * 1000,
   });
 }
@@ -101,7 +106,7 @@ export function useDailyMovers(limit: number = 5) {
 export function useMarketStatus() {
   return useQuery<MarketStatus>({
     queryKey: queryKeys.marketStatus,
-    queryFn: () => mockApi.getMarketStatus(),
+    queryFn: () => service.getMarketStatus(),
     refetchInterval: 60 * 1000,
   });
 }
@@ -110,7 +115,7 @@ export function useMarketStatus() {
 export function useSectors() {
   return useQuery<Sector[]>({
     queryKey: queryKeys.sectors,
-    queryFn: () => mockApi.getSectors(),
+    queryFn: () => service.getSectors(),
     refetchInterval: 5 * 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -120,7 +125,7 @@ export function useSectors() {
 export function useFeaturedNews() {
   return useQuery<FeaturedNews>({
     queryKey: queryKeys.featuredNews,
-    queryFn: () => mockApi.getFeaturedNews(),
+    queryFn: () => service.getFeaturedNews(),
     refetchInterval: 5 * 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -130,7 +135,7 @@ export function useFeaturedNews() {
 export function useStocksBySector(sector: string) {
   return useQuery<StockData[]>({
     queryKey: queryKeys.stocksBySector(sector),
-    queryFn: () => mockApi.getStocksBySector(sector),
+    queryFn: () => service.getStocksBySector(sector),
     refetchInterval: 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -140,7 +145,7 @@ export function useStocksBySector(sector: string) {
 export function useNews(limit: number = 6) {
   return useQuery<NewsItem[]>({
     queryKey: [...queryKeys.news, limit],
-    queryFn: () => mockApi.getNews(limit),
+    queryFn: () => service.getNews(limit),
     refetchInterval: 5 * 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -150,7 +155,7 @@ export function useNews(limit: number = 6) {
 export function useEarnings(limit: number = 8) {
   return useQuery<EarningEvent[]>({
     queryKey: [...queryKeys.earnings, limit],
-    queryFn: () => mockApi.getEarnings(limit),
+    queryFn: () => service.getEarnings(limit),
     refetchInterval: 60 * 60 * 1000,
     staleTime: 30 * 60 * 1000,
   });
@@ -160,7 +165,7 @@ export function useEarnings(limit: number = 8) {
 export function useAnalystRatings(limit: number = 6) {
   return useQuery<AnalystRating[]>({
     queryKey: [...queryKeys.ratings, limit],
-    queryFn: () => mockApi.getAnalystRatings(limit),
+    queryFn: () => service.getAnalystRatings(limit),
     refetchInterval: 5 * 60 * 1000,
     staleTime: 60 * 1000,
   });
@@ -170,7 +175,7 @@ export function useAnalystRatings(limit: number = 6) {
 export function useDividendStocks(limit: number = 6) {
   return useQuery<DividendStock[]>({
     queryKey: [...queryKeys.dividends, limit],
-    queryFn: () => mockApi.getDividendStocks(limit),
+    queryFn: () => service.getDividendStocks(limit),
     refetchInterval: 60 * 60 * 1000,
     staleTime: 30 * 60 * 1000,
   });
@@ -180,7 +185,7 @@ export function useDividendStocks(limit: number = 6) {
 export function useWeekHighsLows() {
   return useQuery<{ highs: WeekHighLow[]; lows: WeekHighLow[] }>({
     queryKey: queryKeys.weekHighsLows,
-    queryFn: () => mockApi.getWeekHighsLows(),
+    queryFn: () => service.getWeekHighsLows(),
     refetchInterval: 60 * 1000,
     staleTime: 30 * 1000,
   });
