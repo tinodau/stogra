@@ -18,24 +18,24 @@ This file provides context and rules for all AI assistants (Claude, Cursor, GitH
 
 ### Frontend (`client/`)
 
-| Component | Choice |
-|-----------|--------|
-| Framework | React 19 + Vite |
-| Language | TypeScript (strict) |
-| Styling | Tailwind CSS 4.0 |
-| UI Library | Shadcn UI |
-| State/Fetch | TanStack Query |
-| Routing | TanStack Router |
+| Component   | Choice              |
+| ----------- | ------------------- |
+| Framework   | React 19 + Vite     |
+| Language    | TypeScript (strict) |
+| Styling     | Tailwind CSS 4.0    |
+| UI Library  | Shadcn UI           |
+| State/Fetch | TanStack Query      |
+| Routing     | TanStack Router     |
 
 ### Backend (`server/`)
 
-| Component | Choice |
-|-----------|--------|
-| Framework | FastAPI |
-| Language | Python 3.11+ |
-| Data Provider | yfinance |
-| Validation | Pydantic v2 |
-| Server | Uvicorn |
+| Component     | Choice       |
+| ------------- | ------------ |
+| Framework     | FastAPI      |
+| Language      | Python 3.11+ |
+| Data Provider | yfinance     |
+| Validation    | Pydantic v2  |
+| Server        | Uvicorn      |
 
 ---
 
@@ -49,14 +49,14 @@ This file provides context and rules for all AI assistants (Claude, Cursor, GitH
 
 ### OKLCH Colors (CSS Variables)
 
-| Token | Light Mode | Dark Mode |
-|-------|------------|-----------|
-| `--background` | `oklch(0.9940 0 0)` | `oklch(0 0 0)` |
-| `--foreground` | `oklch(0 0 0)` | `oklch(0.9551 0 0)` |
-| `--card` | `oklch(0.9940 0 0)` | `oklch(0.1448 0 0)` |
-| `--primary` | `oklch(0.8545 0.1675 159.6564)` | Same (Teal) |
-| `--destructive` | `oklch(0.6665 0.2111 2.8306)` | `oklch(0.7425 0.1696 1.0847)` |
-| `--radius` | `1.4rem` | `1.4rem` |
+| Token           | Light Mode                      | Dark Mode                     |
+| --------------- | ------------------------------- | ----------------------------- |
+| `--background`  | `oklch(0.9940 0 0)`             | `oklch(0 0 0)`                |
+| `--foreground`  | `oklch(0 0 0)`                  | `oklch(0.9551 0 0)`           |
+| `--card`        | `oklch(0.9940 0 0)`             | `oklch(0.1448 0 0)`           |
+| `--primary`     | `oklch(0.8545 0.1675 159.6564)` | Same (Teal)                   |
+| `--destructive` | `oklch(0.6665 0.2111 2.8306)`   | `oklch(0.7425 0.1696 1.0847)` |
+| `--radius`      | `1.4rem`                        | `1.4rem`                      |
 
 ### Color Logic
 
@@ -73,6 +73,10 @@ This file provides context and rules for all AI assistants (Claude, Cursor, GitH
 - **No comments unless requested** — code should be self-documenting.
 - **Type safety is mandatory** — strict TypeScript, Pydantic schemas.
 - **Follow existing patterns** — check neighboring files before adding new code.
+- **Always run lint and format after edits**:
+  ```bash
+  cd client && npm run lint -- --fix && npm run format
+  ```
 
 ### Frontend
 
@@ -157,13 +161,13 @@ cd server && docker build -t stogra-api .
 
 ## 7. API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Health check for Koyeb |
-| `/api/search?q={query}` | GET | Search tickers |
-| `/api/stocks?symbols={csv}` | GET | Get stock data (batch) |
-| `/api/market/snapshot` | GET | Indices + top movers |
-| `/api/stocks/{symbol}` | GET | Single stock detail |
+| Endpoint                    | Method | Description            |
+| --------------------------- | ------ | ---------------------- |
+| `/health`                   | GET    | Health check for Koyeb |
+| `/api/search?q={query}`     | GET    | Search tickers         |
+| `/api/stocks?symbols={csv}` | GET    | Get stock data (batch) |
+| `/api/market/snapshot`      | GET    | Indices + top movers   |
+| `/api/stocks/{symbol}`      | GET    | Single stock detail    |
 
 ---
 
@@ -197,3 +201,44 @@ When starting a new session:
 - Establishing new code patterns → Update `patterns.md`
 
 **Format:** Use datetime in ISO format: `YYYY-MM-DD HH:MM UTC`
+
+---
+
+## 11. Session Workflow
+
+### Start of Session
+
+1. Read `TODO.md` — check current focus and blockers
+2. Read `.memory/lessons-learned.md` — recent context
+3. Pick next task from TODO.md (prioritize `@high` tasks)
+
+### During Session
+
+- Reference files using: `file.ts:42` or `→ see: file.ts`
+- Follow patterns from `.memory/patterns.md`
+
+### End of Session
+
+1. **Update `TODO.md`** — mark completed tasks, update Current Focus
+2. **Update `.memory/lessons-learned.md`** — add session entry with datetime
+3. **Update `.memory/patterns.md`** — if new patterns established
+4. **Update `.docs/`** — if API contract or architecture changed
+
+### File Reference Convention
+
+| Format           | Usage                  |
+| ---------------- | ---------------------- |
+| `file.ts:42`     | Specific line number   |
+| `file.ts:10-25`  | Line range             |
+| `→ see: file.ts` | Doc reference          |
+| `#PHASE-5`       | TODO section reference |
+
+---
+
+## 12. Priority Tags
+
+| Tag       | Meaning             | Action                     |
+| --------- | ------------------- | -------------------------- |
+| `@high`   | Blocking / Critical | Complete first             |
+| `@medium` | Important           | Complete after @high       |
+| `@low`    | Nice to have        | Complete when time permits |

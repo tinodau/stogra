@@ -1,5 +1,26 @@
 # Stogra Master TODO List
 
+## 🎯 Current Focus
+
+**Phase:** 5 - Integration & Polish
+**Priority Tasks:**
+
+- Switch from Mock Data to live API @high
+- Implement Polling @medium
+
+---
+
+## Legend
+
+| Tag       | Meaning                    |
+| --------- | -------------------------- |
+| `@high`   | Must complete first        |
+| `@medium` | Important but not blocking |
+| `@low`    | Nice to have               |
+| `→ see:`  | File reference             |
+
+---
+
 ## ✅ PHASE 1: Environment & Core Configuration
 
 _Focus: Setting the foundation to prevent technical debt._
@@ -74,26 +95,29 @@ _Focus: Building the data engine to supply the Frontend._
 _Focus: Connecting the Frontend to the live Backend._
 
 - [ ] **Data Bridge**
-  - [ ] Switch from Mock Data to live API calls using `VITE_API_URL`.
-  - [ ] Implement **Polling** (60-second intervals) for automatic price refreshes.
+  - [ ] Switch from Mock Data to live API calls using `VITE_API_URL` @high
+        → see: `client/src/hooks/useMarketData.ts`
+        → see: `client/src/api/mock-data.ts`
+  - [ ] Implement **Polling** (60-second intervals) for automatic price refreshes @medium
 - [ ] **Edge Cases**
-  - [ ] Handle "Market Closed" state with visual indicators.
-  - [ ] Handle "Empty State" for new users with empty watchlists.
-  - [ ] Implement Error Boundaries for API failures.
+  - [ ] Handle "Market Closed" state with visual indicators @medium
+  - [ ] Handle "Empty State" for new users with empty watchlists @low
+  - [ ] Implement Error Boundaries for API failures @medium
 
 ## 🚀 PHASE 6: Deployment
 
 _Focus: Going live._
 
 - [ ] **Backend Deployment**
-  - [ ] Build Docker Image.
-  - [ ] Deploy to **Koyeb Tokyo (NRT)**.
+  - [ ] Build Docker Image @high
+        → see: `server/Dockerfile`
+  - [ ] Deploy to **Koyeb Tokyo (NRT)** @high
 - [ ] **Frontend Deployment**
-  - [ ] Configure **Cloudflare Pages**.
-  - [ ] Setup SSL and Production Environment Variables.
+  - [ ] Configure **Cloudflare Pages** @high
+  - [ ] Setup SSL and Production Environment Variables @medium
 
 ## 📈 PHASE 7: Market Expansion (Future)
 
-- [ ] Multi-currency support (USD/IDR toggle).
-- [ ] Integration of global indices (S&P 500, NASDAQ, IDX Composite).
-- [ ] Advanced technical indicators for Sparklines.
+- [ ] Multi-currency support (USD/IDR toggle) @low
+- [ ] Integration of global indices (S&P 500, NASDAQ, IDX Composite) @low
+- [ ] Advanced technical indicators for Sparklines @low
