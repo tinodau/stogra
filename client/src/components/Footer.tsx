@@ -1,6 +1,8 @@
 import { TrendingUp, Heart } from "lucide-react";
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="border-border bg-muted/30 mt-16 border-t">
       <div className="container mx-auto px-4 py-8">
@@ -16,9 +18,9 @@ export function Footer() {
           </p>
 
           <div className="text-muted-foreground flex items-center gap-4 text-xs">
-            <span>Built with React + FastAPI</span>
+            <span>© {year} Stogra</span>
             <span>•</span>
-            <span>© 2025 Stogra</span>
+            <span>Tino Dau</span>
           </div>
 
           <div className="text-muted-foreground flex items-center gap-1 text-xs">
