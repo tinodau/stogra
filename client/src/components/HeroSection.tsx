@@ -1,5 +1,8 @@
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { SearchBar } from "./SearchBar";
+import { TickerMarquee } from "./TickerMarquee";
 import { useMarketStatus, useMarketSnapshot } from "@/hooks/useMarketData";
 import { SkeletonSidebarItem } from "./SkeletonCard";
 
@@ -10,12 +13,21 @@ interface HeroSectionProps {
 export function HeroSection({ onAddStock }: HeroSectionProps) {
   const { data: status } = useMarketStatus();
   const { data: snapshot, isLoading: snapshotLoading } = useMarketSnapshot();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="bg-muted/30 w-full py-8 lg:py-16">
-      <div className="container mx-auto w-full px-4">
+    <section className="bg-muted/30 relative w-full overflow-hidden py-8 lg:py-16">
+      <TickerMarquee />
+
+      <div className="relative z-10 container mx-auto w-full px-4">
         {status && (
-          <div className="mb-4 flex justify-center sm:mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-4 flex justify-center sm:mb-6"
+          >
             <div
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium sm:gap-2 sm:px-4 sm:py-1.5 sm:text-sm ${
                 status.isOpen ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
@@ -33,16 +45,26 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
                 </span>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
 
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-foreground font-serif text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+        <div ref={ref} className="mx-auto max-w-3xl text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-foreground font-serif text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
+          >
             Markets Rally as Tech Leads Gains
-          </h1>
-          <p className="text-muted-foreground mt-3 text-base sm:mt-4 sm:text-lg">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+            className="text-muted-foreground mt-3 text-base sm:mt-4 sm:text-lg"
+          >
             Professional US market monitoring with editorial precision.
-          </p>
+          </motion.p>
 
           {snapshotLoading ? (
             <div className="mt-6 flex justify-center gap-2 sm:mt-8 sm:gap-4">
@@ -53,11 +75,14 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
           ) : (
             snapshot && (
               <div className="mt-6 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-4">
-                {snapshot.indices.map((index) => {
+                {snapshot.indices.map((index, i) => {
                   const isPositive = index.change_percent >= 0;
                   return (
-                    <div
+                    <motion.div
                       key={index.symbol}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.2 + i * 0.1, ease: "easeOut" }}
                       className="border-border bg-card rounded-(--radius) border px-2 py-2 sm:px-4 sm:py-3 lg:px-6"
                     >
                       <span className="text-muted-foreground block text-center text-[10px] font-medium sm:text-xs">
@@ -81,16 +106,21 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
                           {index.change_percent.toFixed(2)}%
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
             )
           )}
 
-          <div className="mt-6 flex justify-center sm:mt-8">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+            className="mt-6 flex justify-center sm:mt-8"
+          >
             <SearchBar onAdd={onAddStock} />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
