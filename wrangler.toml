@@ -2,12 +2,12 @@ name = "stogra"
 compatibility_date = "2024-01-01"
 
 [site]
-bucket = "./dist"
+bucket = "./client/dist"
 
 [build]
-command = "npm run build"
+command = "cd client && npm install && npm run build"
 cwd = "."
-watch_dir = "src"
+watch_dir = "client/src"
 
 [[routes]]
 pattern = "/*"
