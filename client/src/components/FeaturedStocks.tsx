@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import type { StockData, SectorFilter } from "@/types";
-import { SparklineView } from "./SparklineView";
 import { SectorFilter as SectorFilterComponent } from "./SectorFilter";
 
 interface FeaturedStocksProps {
@@ -45,13 +44,6 @@ export function FeaturedStocks({ stocks, onAdd }: FeaturedStocksProps) {
                       {stock.change_percent.toFixed(2)}%
                     </span>
                   </div>
-                </div>
-                <div className="h-6 w-12 shrink-0 sm:h-8 sm:w-16">
-                  <SparklineView
-                    data={stock.sparkline}
-                    isPositive={isPositive}
-                    className="h-full w-full"
-                  />
                 </div>
               </div>
 
