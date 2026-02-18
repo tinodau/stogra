@@ -1,27 +1,21 @@
 interface SparklineViewProps {
   data: number[];
   isPositive: boolean;
-  height?: number;
   className?: string;
 }
 
-export function SparklineView({
-  data,
-  isPositive,
-  height = 40,
-  className = "w-full",
-}: SparklineViewProps) {
+export function SparklineView({ data, isPositive, className = "" }: SparklineViewProps) {
   if (!data || data.length === 0) {
-    return <div style={{ height }} className={`bg-muted/50 rounded ${className}`} />;
+    return <div className={`bg-muted/50 rounded ${className}`} />;
   }
 
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
 
+  const viewBoxHeight = 32;
+  const viewBoxWidth = 64;
   const padding = 2;
-  const viewBoxWidth = 100;
-  const viewBoxHeight = height;
   const chartWidth = viewBoxWidth - padding * 2;
   const chartHeight = viewBoxHeight - padding * 2;
 
@@ -41,7 +35,6 @@ export function SparklineView({
       viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
       preserveAspectRatio="none"
       className={className}
-      style={{ height }}
     >
       <defs>
         <linearGradient id={fillGradientId} x1="0" y1="0" x2="0" y2="1">
@@ -57,7 +50,7 @@ export function SparklineView({
         d={pathD}
         fill="none"
         stroke={strokeColor}
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
