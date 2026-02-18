@@ -180,3 +180,54 @@ Migrate to `eslint.config.js` using `typescript-eslint` flat config presets.
 - Config file is now `eslint.config.js` instead of `.eslintrc.json`
 - Must use `import` syntax (ESM)
 - Parser options require `tsconfigRootDir: import.meta.dirname`
+
+---
+
+## ADR-008: Primary Color Lightness for Accessibility
+
+**Date:** 2025-02-18 07:45 UTC
+**Status:** Accepted
+
+**Context:**
+Tweakcn's default primary color at 85% lightness is hard to read as text on white backgrounds.
+
+**Decision:**
+Use 65% lightness for primary color in light mode, keep 85% for dark mode.
+
+**Rationale:**
+
+- 65% lightness provides ~4.5:1 contrast ratio (WCAG AA compliant)
+- Still vibrant and on-brand (teal/emerald)
+- Dark mode unchanged because light text on dark background is readable
+
+**Consequences:**
+
+- Light mode: `--primary: oklch(0.65 0.175 159.6564)`
+- Dark mode: `--primary: oklch(0.8545 0.1675 159.6564)`
+- `--primary-foreground` changed to white for button text
+
+---
+
+## ADR-009: Border and Shadow Visibility
+
+**Date:** 2025-02-18 07:45 UTC
+**Status:** Accepted
+
+**Context:**
+Default borders (97% lightness) and shadows (5-10% opacity) were barely visible on cards.
+
+**Decision:**
+Darken borders to 92% lightness and increase shadow opacity.
+
+**Rationale:**
+
+- 92% lightness provides clear visual separation on 99% white background
+- Higher shadow opacity creates better depth perception
+- Dark mode shadows need higher opacity to be visible on dark backgrounds
+
+**Consequences:**
+
+| Mode  | Border        | Shadow-sm   | Shadow-md   |
+| ----- | ------------- | ----------- | ----------- |
+| Light | 92% lightness | 8% opacity  | 12% opacity |
+| Dark  | 21% lightness | 20% opacity | 25% opacity |

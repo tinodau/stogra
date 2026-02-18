@@ -146,15 +146,41 @@ interface WeekHighLow {
 
 ---
 
+## 2025-02-18 07:45 UTC: Design System Polish
+
+### What Worked
+
+- **Tweakcn color tokens**: Complete OKLCH color scheme with proper contrast ratios
+- **Primary color at 65% lightness**: WCAG AA compliant (~4.5:1 contrast) while still vibrant
+- **Darker borders (92% lightness)**: Better visibility on white backgrounds
+- **Increased shadow opacity**: More visible depth in both light and dark modes
+
+### Design Decisions
+
+| Element      | Light Mode              | Dark Mode                      |
+| ------------ | ----------------------- | ------------------------------ |
+| Primary text | 65% lightness teal      | 85% lightness teal (unchanged) |
+| Border       | 92% lightness (was 97%) | 21% lightness (unchanged)      |
+| Shadow-sm    | 8% opacity              | 20% opacity                    |
+| Shadow-md    | 12% opacity             | 25% opacity                    |
+
+### Files Modified
+
+- `globals.css` - Updated all color tokens, shadow variables
+
+---
+
 ## Session Log
 
-| Datetime             | Focus                 | Key Outcome                                                                 |
-| -------------------- | --------------------- | --------------------------------------------------------------------------- |
-| 2025-02-18 06:51 UTC | Project exploration   | Documented architecture, identified Phase 5-6 blockers                      |
-| 2025-02-18 06:55 UTC | Workflow improvements | Added TODO priority tags, session workflow, file reference conventions      |
-| 2025-02-18 07:00 UTC | ESLint migration      | Migrated from `.eslintrc.json` to `eslint.config.js` (ESLint 9 flat config) |
-| 2025-02-18 07:10 UTC | Homepage enhancement  | Added Hero stats, FeaturedStocks, SectorFilter, MarketHours, Footer         |
-| 2025-02-18 07:25 UTC | Content expansion     | Added MarketNews, EarningsCalendar, AnalystRatings, DividendStocks          |
+| Datetime             | Focus                   | Key Outcome                                                                 |
+| -------------------- | ----------------------- | --------------------------------------------------------------------------- |
+| 2025-02-18 06:51 UTC | Project exploration     | Documented architecture, identified Phase 5-6 blockers                      |
+| 2025-02-18 06:55 UTC | Workflow improvements   | Added TODO priority tags, session workflow, file reference conventions      |
+| 2025-02-18 07:00 UTC | ESLint migration        | Migrated from `.eslintrc.json` to `eslint.config.js` (ESLint 9 flat config) |
+| 2025-02-18 07:10 UTC | Homepage enhancement    | Added Hero stats, FeaturedStocks, SectorFilter, MarketHours, Footer         |
+| 2025-02-18 07:25 UTC | Content expansion       | Added MarketNews, EarningsCalendar, AnalystRatings, DividendStocks          |
+| 2025-02-18 07:35 UTC | AnalystRatings refactor | Converted to compact 3-column grid layout                                   |
+| 2025-02-18 07:45 UTC | Design system polish    | Tweakcn colors, primary contrast fix, border/shadow visibility              |
 
 ---
 

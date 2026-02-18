@@ -3,6 +3,7 @@
 ## 🎯 Current Focus
 
 **Phase:** 5 - Integration & Polish
+**Status:** Homepage UI complete, ready for API integration
 **Priority Tasks:**
 
 - Switch from Mock Data to live API @high
@@ -63,6 +64,7 @@ _Focus: Making the app functional using simulated data._
 - [x] **Mock Service Layer**
   - [x] Created `api/mock-data.ts` with 24 US stocks (AAPL, TSLA, NVDA, etc.).
   - [x] API simulation functions with 300-500ms delay for realistic loading.
+  - [x] Extended mock data: news, earnings, ratings, dividends, 52-week highs/lows.
 - [x] **State Management**
   - [x] `useWatchlist` Hook: LocalStorage CRUD + persistence.
   - [x] `useSearch` Hook: 300ms debounce + TanStack Query.
@@ -71,6 +73,18 @@ _Focus: Making the app functional using simulated data._
   - [x] "Add to Watchlist" from search dropdown.
   - [x] "Remove" button on stock cards.
   - [x] Theme switching (Light/Dark/System) with `useTheme` hook.
+- [x] **Homepage Content Sections**
+  - [x] FeaturedStocks grid with sector filter tabs.
+  - [x] MarketNews with sentiment icons and category badges.
+  - [x] EarningsCalendar table with EPS estimates.
+  - [x] AnalystRatings with visual rating bars.
+  - [x] DividendStocks grid sorted by yield.
+  - [x] Sidebar: MarketHours, SectorPerformance, EarningsMini.
+- [x] **Design System Polish**
+  - [x] Tweakcn OKLCH color tokens.
+  - [x] Primary color adjusted to 65% lightness (WCAG AA compliant).
+  - [x] Border visibility improved (92% lightness).
+  - [x] Shadow opacity increased for better depth.
 
 ## 🔵 PHASE 4: Backend Engineering (FastAPI) — COMPLETED
 
