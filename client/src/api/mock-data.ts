@@ -694,10 +694,45 @@ export const mockApi = {
     };
   },
 
-  // Get market status
+  // Get market status (dynamic calculation)
   async getMarketStatus(): Promise<MarketStatus> {
     await delay(200);
-    return MOCK_MARKET_STATUS;
+
+    const now = new Date();
+    const etTime = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    const hours = etTime.getHours();
+    const minutes = etTime.getMinutes();
+    const day = etTime.getDay();
+
+    const isWeekday = day >= 1 && day <= 5;
+    const currentMinutes = hours * 60 + minutes;
+    const marketOpenMinutes = 9 * 60 + 30;
+    const marketCloseMinutes = 16 * 60;
+
+    const isOpen =
+      isWeekday && currentMinutes >= marketOpenMinutes && currentMinutes < marketCloseMinutes;
+
+    let countdown = "";
+    if (isOpen) {
+      const remainingMinutes = marketCloseMinutes - currentMinutes;
+      const h = Math.floor(remainingMinutes / 60);
+      const m = remainingMinutes % 60;
+      countdown = `${h}h ${m}m`;
+    } else if (isWeekday && currentMinutes < marketOpenMinutes) {
+      const untilOpen = marketOpenMinutes - currentMinutes;
+      const h = Math.floor(untilOpen / 60);
+      const m = untilOpen % 60;
+      countdown = `${h}h ${m}m`;
+    }
+
+    return {
+      isOpen,
+      exchange: "NYSE",
+      nextEvent: isOpen ? "close" : "open",
+      countdown,
+      openTime: "9:30 AM ET",
+      closeTime: "4:00 PM ET",
+    };
   },
 
   // Get sector performance
