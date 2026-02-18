@@ -71,16 +71,13 @@ export interface FeaturedNews {
 // Sector filter type
 export type SectorFilter = "all" | "tech" | "finance" | "energy" | "healthcare";
 
-// News Item
+// News Item (matches yfinance structure)
 export interface NewsItem {
-  id: string;
   title: string;
-  summary: string;
-  source: string;
+  publisher: string;
+  link: string;
   published_at: string;
   related_stocks: string[];
-  sentiment: "positive" | "negative" | "neutral";
-  category: "earnings" | "market" | "company" | "economy";
 }
 
 // Earnings Event
@@ -93,11 +90,11 @@ export interface EarningEvent {
   actual_eps?: number | null;
 }
 
-// Analyst Rating
+// Analyst Rating (adapted to yfinance)
 export interface AnalystRating {
   symbol: string;
   name: string;
-  rating: "strong_buy" | "buy" | "hold" | "sell" | "strong_sell";
+  rating: "buy" | "hold" | "sell";
   rating_score: number;
   target_price: number;
   current_price: number;

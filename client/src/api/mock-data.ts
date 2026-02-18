@@ -358,73 +358,49 @@ export const SECTOR_STOCKS: Record<string, string[]> = {
   healthcare: ["JNJ", "UNH", "PFE", "ABBV", "MRK", "LLY", "TMO", "ABT", "DHR", "BMY"],
 };
 
-// Market News
+// Market News (yfinance-compatible structure)
 export const MOCK_NEWS: NewsItem[] = [
   {
-    id: "1",
     title: "NVIDIA Surges on Record AI Chip Demand",
-    summary:
-      "NVIDIA shares rally as data center revenue triples, beating analyst expectations. AI chip demand continues to drive unprecedented growth in the semiconductor sector.",
-    source: "Reuters",
-    published_at: "2 hours ago",
+    publisher: "Reuters",
+    link: "https://www.reuters.com/technology/nvidia",
+    published_at: "2025-02-18T14:30:00Z",
     related_stocks: ["NVDA", "AMD"],
-    sentiment: "positive",
-    category: "earnings",
   },
   {
-    id: "2",
     title: "Tesla Deliveries Miss Estimates Amid Production Challenges",
-    summary:
-      "Tesla reported lower-than-expected Q4 deliveries as production challenges at its Berlin and Austin factories impacted output. Shares slipped in after-hours trading.",
-    source: "Bloomberg",
-    published_at: "4 hours ago",
+    publisher: "Bloomberg",
+    link: "https://www.bloomberg.com/tesla",
+    published_at: "2025-02-18T12:00:00Z",
     related_stocks: ["TSLA"],
-    sentiment: "negative",
-    category: "company",
   },
   {
-    id: "3",
     title: "Fed Signals Potential Rate Cuts in 2025",
-    summary:
-      "Federal Reserve officials hinted at possible interest rate cuts later this year as inflation shows signs of cooling. Markets responded positively to the dovish signals.",
-    source: "WSJ",
-    published_at: "5 hours ago",
+    publisher: "Wall Street Journal",
+    link: "https://www.wsj.com/economy",
+    published_at: "2025-02-18T11:00:00Z",
     related_stocks: [],
-    sentiment: "positive",
-    category: "economy",
   },
   {
-    id: "4",
     title: "Apple Vision Pro Sales Exceed Expectations",
-    summary:
-      "Apple's mixed reality headset has seen stronger-than-expected demand, with initial supply sold out. Analysts raise price targets on sustained consumer interest.",
-    source: "CNBC",
-    published_at: "6 hours ago",
+    publisher: "CNBC",
+    link: "https://www.cnbc.com/apple",
+    published_at: "2025-02-18T10:00:00Z",
     related_stocks: ["AAPL"],
-    sentiment: "positive",
-    category: "company",
   },
   {
-    id: "5",
     title: "Meta Announces Major AI Investment Initiative",
-    summary:
-      "Meta Platforms unveiled a $10B investment in AI infrastructure, signaling aggressive expansion in the artificial intelligence space to compete with rivals.",
-    source: "TechCrunch",
-    published_at: "8 hours ago",
+    publisher: "TechCrunch",
+    link: "https://techcrunch.com/meta",
+    published_at: "2025-02-18T08:00:00Z",
     related_stocks: ["META", "NVDA"],
-    sentiment: "positive",
-    category: "company",
   },
   {
-    id: "6",
     title: "Oil Prices Slip on Demand Concerns",
-    summary:
-      "Crude oil futures fell as weak economic data from China raised concerns about global energy demand. Energy sector stocks traded lower in pre-market.",
-    source: "Reuters",
-    published_at: "10 hours ago",
+    publisher: "Reuters",
+    link: "https://www.reuters.com/markets",
+    published_at: "2025-02-18T06:00:00Z",
     related_stocks: ["XOM", "CVX"],
-    sentiment: "negative",
-    category: "market",
   },
 ];
 
@@ -488,12 +464,12 @@ export const MOCK_EARNINGS: EarningEvent[] = [
   },
 ];
 
-// Analyst Ratings
+// Analyst Ratings (adapted to yfinance - only buy/hold/sell)
 export const MOCK_RATINGS: AnalystRating[] = [
   {
     symbol: "NVDA",
     name: "NVIDIA Corporation",
-    rating: "strong_buy",
+    rating: "buy",
     rating_score: 4.8,
     target_price: 850,
     current_price: 726.13,

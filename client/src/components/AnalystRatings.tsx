@@ -4,19 +4,15 @@ import { SkeletonCard } from "./SkeletonCard";
 import type { AnalystRating } from "@/types";
 
 const RATING_COLORS: Record<AnalystRating["rating"], { bg: string; text: string }> = {
-  strong_buy: { bg: "bg-primary", text: "text-primary" },
-  buy: { bg: "bg-primary/70", text: "text-primary" },
+  buy: { bg: "bg-primary", text: "text-primary" },
   hold: { bg: "bg-yellow-500", text: "text-yellow-600 dark:text-yellow-400" },
-  sell: { bg: "bg-destructive/70", text: "text-destructive" },
-  strong_sell: { bg: "bg-destructive", text: "text-destructive" },
+  sell: { bg: "bg-destructive", text: "text-destructive" },
 };
 
-const RATING_SHORT: Record<AnalystRating["rating"], string> = {
-  strong_buy: "Buy",
+const RATING_LABELS: Record<AnalystRating["rating"], string> = {
   buy: "Buy",
   hold: "Hold",
   sell: "Sell",
-  strong_sell: "Sell",
 };
 
 export function AnalystRatings() {
@@ -64,7 +60,7 @@ export function AnalystRatings() {
                 </div>
                 <div className="shrink-0 text-right">
                   <span className={`font-mono text-sm font-semibold sm:text-lg ${style.text}`}>
-                    {RATING_SHORT[rating.rating]}
+                    {RATING_LABELS[rating.rating]}
                   </span>
                   <span className="text-muted-foreground block text-[10px] sm:text-xs">
                     {rating.analyst_count} analysts

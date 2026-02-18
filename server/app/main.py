@@ -52,6 +52,47 @@ class MarketSnapshot(BaseModel):
     top_movers: List[MoverStock]
 
 
+class MarketStatus(BaseModel):
+    isOpen: bool
+    exchange: str
+    nextEvent: str
+    countdown: str
+    openTime: str
+    closeTime: str
+
+
+class Sector(BaseModel):
+    name: str
+    change_percent: float
+
+
+class NewsItem(BaseModel):
+    title: str
+    publisher: str
+    link: str
+    published_at: str
+    related_stocks: List[str]
+
+
+class AnalystRating(BaseModel):
+    symbol: str
+    name: str
+    rating: str
+    rating_score: float
+    target_price: float
+    current_price: float
+    upside_percent: float
+    analyst_count: int
+
+
+class EarningEvent(BaseModel):
+    symbol: str
+    name: str
+    date: str
+    time: str
+    expected_eps: float | None
+
+
 class HealthStatus(BaseModel):
     status: str
     version: str
@@ -100,7 +141,9 @@ async def health_check() -> HealthStatus:
 
 
 @app.get("/api/search", response_model=List[SearchResult])
-async def search_tickers(q: str = Query(..., min_length=1, max_length=50)) -> List[SearchResult]:
+async def search_tickers(
+    q: str = Query(..., min_length=1, max_length=50),
+) -> List[SearchResult]:
     """
     Search for stock tickers by company name or symbol
     - Debounce on frontend: 300ms
@@ -110,15 +153,14 @@ async def search_tickers(q: str = Query(..., min_length=1, max_length=50)) -> Li
         results = await market_service.search_tickers(q)
         return results[:5]  # Limit to 5 results
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Search error: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")
 
 
 @app.get("/api/stocks", response_model=List[StockData])
 async def get_stocks(
-    symbols: str = Query(..., description="Comma-separated stock symbols e.g., AAPL,TSLA,MSFT")
+    symbols: str = Query(
+        ..., description="Comma-separated stock symbols e.g., AAPL,TSLA,MSFT"
+    ),
 ) -> List[StockData]:
     """
     Fetch data for multiple stocks including sparkline data
@@ -134,8 +176,7 @@ async def get_stocks(
         return stocks
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch stock data: {str(e)}"
+            status_code=500, detail=f"Failed to fetch stock data: {str(e)}"
         )
 
 
@@ -149,8 +190,7 @@ async def get_market_snapshot() -> MarketSnapshot:
         return snapshot
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch market snapshot: {str(e)}"
+            status_code=500, detail=f"Failed to fetch market snapshot: {str(e)}"
         )
 
 
@@ -168,6 +208,75 @@ async def get_stock_detail(symbol: str) -> StockData:
         raise
     except Exception as e:
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to fetch stock detail: {str(e)}"
+            status_code=500, detail=f"Failed to fetch stock detail: {str(e)}"
+        )
+
+
+@app.get("/api/market/status", response_model=MarketStatus)
+async def get_market_status() -> MarketStatus:
+    """
+    Get current market status (open/closed) based on NYSE hours
+    """
+    try:
+        status = await market_service.get_market_status()
+        return status
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch market status: {str(e)}"
+        )
+
+
+@app.get("/api/market/sectors", response_model=List[Sector])
+async def get_sector_performance() -> List[Sector]:
+    """
+    Get sector performance calculated from sector ETFs
+    """
+    try:
+        sectors = await market_service.get_sector_performance()
+        return sectors
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch sector performance: {str(e)}"
+        )
+
+
+@app.get("/api/market/news", response_model=List[NewsItem])
+async def get_news(limit: int = Query(6, ge=1, le=20)) -> List[NewsItem]:
+    """
+    Get market news from yfinance
+    """
+    try:
+        news = await market_service.get_news(limit)
+        return news
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch news: {str(e)}")
+
+
+@app.get("/api/market/ratings", response_model=List[AnalystRating])
+async def get_analyst_ratings(
+    limit: int = Query(6, ge=1, le=20),
+) -> List[AnalystRating]:
+    """
+    Get analyst ratings and price targets
+    """
+    try:
+        ratings = await market_service.get_analyst_ratings(limit=limit)
+        return ratings
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch analyst ratings: {str(e)}"
+        )
+
+
+@app.get("/api/market/earnings", response_model=List[EarningEvent])
+async def get_earnings(limit: int = Query(8, ge=1, le=20)) -> List[EarningEvent]:
+    """
+    Get upcoming earnings calendar
+    """
+    try:
+        earnings = await market_service.get_earnings(limit)
+        return earnings
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch earnings: {str(e)}"
         )

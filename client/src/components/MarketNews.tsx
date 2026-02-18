@@ -1,31 +1,18 @@
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useNews } from "@/hooks/useMarketData";
 import { SkeletonCard } from "./SkeletonCard";
-import type { NewsItem } from "@/types";
 
-function NewsSentimentIcon({ sentiment }: { sentiment: NewsItem["sentiment"] }) {
-  if (sentiment === "positive") {
-    return <TrendingUp className="text-primary h-4 w-4" />;
-  }
-  if (sentiment === "negative") {
-    return <TrendingDown className="text-destructive h-4 w-4" />;
-  }
-  return <Minus className="text-muted-foreground h-4 w-4" />;
-}
+function formatPublishedAt(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-function CategoryBadge({ category }: { category: NewsItem["category"] }) {
-  const colors: Record<NewsItem["category"], string> = {
-    earnings: "bg-primary/10 text-primary",
-    market: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-    company: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-    economy: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
-  };
-
-  return (
-    <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${colors[category]}`}>
-      {category.charAt(0).toUpperCase() + category.slice(1)}
-    </span>
-  );
+  if (diffHours < 1) return "Just now";
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
 }
 
 export function MarketNews() {
@@ -33,7 +20,7 @@ export function MarketNews() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
         {Array.from({ length: 3 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
@@ -44,41 +31,37 @@ export function MarketNews() {
   if (!news || news.length === 0) return null;
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-3 sm:space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-xl font-semibold sm:text-2xl">Market News</h2>
+        <h2 className="font-serif text-lg font-semibold sm:text-xl">Market News</h2>
         <span className="text-muted-foreground text-xs sm:text-sm">Latest updates</span>
       </div>
 
-      <div className="space-y-3 sm:space-y-4">
+      <div className="space-y-2">
         {news.map((item) => (
-          <article
-            key={item.id}
-            className="border-border bg-card hover:border-muted-foreground/20 rounded-(--radius) border p-3 transition-colors sm:p-4"
+          <a
+            key={`${item.publisher}-${item.published_at}`}
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-border bg-card hover:border-muted-foreground/30 flex items-center gap-3 rounded-md border px-3 py-2.5 transition-colors sm:px-4"
           >
             <div className="min-w-0 flex-1">
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <CategoryBadge category={item.category} />
-                <NewsSentimentIcon sentiment={item.sentiment} />
-              </div>
-              <h3 className="text-foreground text-sm leading-snug font-medium sm:text-base">
-                {item.title}
-              </h3>
-              <p className="text-muted-foreground mt-1 line-clamp-2 text-xs sm:text-sm">
-                {item.summary}
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:mt-3 sm:gap-3">
-                <span className="text-muted-foreground">{item.source}</span>
+              <h3 className="text-foreground text-sm leading-snug font-medium">{item.title}</h3>
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                <span className="text-muted-foreground">{item.publisher}</span>
                 <span className="text-muted-foreground">•</span>
-                <span className="text-muted-foreground">{item.published_at}</span>
+                <span className="text-muted-foreground">
+                  {formatPublishedAt(item.published_at)}
+                </span>
                 {item.related_stocks.length > 0 && (
                   <>
                     <span className="text-muted-foreground">•</span>
                     <div className="flex gap-1">
-                      {item.related_stocks.map((symbol) => (
+                      {item.related_stocks.slice(0, 2).map((symbol) => (
                         <span
                           key={symbol}
-                          className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs font-medium"
+                          className="bg-muted rounded px-1.5 py-0.5 font-mono text-[10px] font-medium"
                         >
                           {symbol}
                         </span>
@@ -88,7 +71,8 @@ export function MarketNews() {
                 )}
               </div>
             </div>
-          </article>
+            <ExternalLink className="text-muted-foreground h-4 w-4 shrink-0" />
+          </a>
         ))}
       </div>
     </div>
