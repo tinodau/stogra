@@ -42,36 +42,46 @@ export function StockList({ stocks, onAdd, onRemove }: StockListProps) {
         return (
           <div
             key={stock.symbol}
-            className="bg-card hover:bg-muted/30 flex items-center gap-2 px-3 py-2.5 transition-colors sm:gap-3 sm:px-4"
+            className="bg-card hover:bg-muted/30 flex items-center gap-2 px-3 py-2 transition-colors sm:gap-3 sm:px-4 sm:py-2.5"
           >
-            <div className="w-8 shrink-0">
-              <StockLogo symbol={stock.symbol} />
-            </div>
+            <StockLogo symbol={stock.symbol} />
 
-            <div className="w-14 shrink-0 sm:w-16">
+            {/* Mobile: Stacked ticker + company */}
+            <div className="min-w-0 flex-1 sm:hidden">
               <span className="font-mono text-sm font-semibold">{stock.symbol}</span>
+              <span className="text-muted-foreground block truncate text-xs">{stock.name}</span>
             </div>
 
-            <div className="min-w-0 flex-1">
-              <span className="text-muted-foreground block truncate text-xs sm:text-sm">
-                {stock.name}
-              </span>
-            </div>
-
-            <div className="w-20 shrink-0 text-right sm:w-24">
+            {/* Mobile: Stacked price + change */}
+            <div className="shrink-0 text-right sm:hidden">
               <span className="font-mono text-sm font-medium">${stock.price.toFixed(2)}</span>
-            </div>
-
-            <div className="w-16 shrink-0 text-right sm:w-20">
               <span
-                className={`font-mono text-xs font-medium sm:text-sm ${isPositive ? "text-primary" : "text-destructive"}`}
+                className={`block font-mono text-xs ${isPositive ? "text-primary" : "text-destructive"}`}
               >
                 {isPositive ? "+" : ""}
                 {stock.change_percent.toFixed(2)}%
               </span>
             </div>
 
-            <div className="w-8 shrink-0">
+            {/* Desktop: Single line with fixed widths */}
+            <div className="hidden w-14 shrink-0 font-mono text-sm font-semibold sm:block">
+              {stock.symbol}
+            </div>
+            <div className="hidden min-w-0 flex-1 sm:block">
+              <span className="text-muted-foreground truncate text-sm">{stock.name}</span>
+            </div>
+            <div className="hidden w-24 shrink-0 text-right font-mono text-sm font-medium sm:block">
+              ${stock.price.toFixed(2)}
+            </div>
+            <div className="hidden w-20 shrink-0 text-right font-mono text-sm sm:block">
+              <span className={isPositive ? "text-primary" : "text-destructive"}>
+                {isPositive ? "+" : ""}
+                {stock.change_percent.toFixed(2)}%
+              </span>
+            </div>
+
+            {/* Action button */}
+            <div className="shrink-0">
               {onRemove && (
                 <button
                   onClick={() => onRemove(stock.symbol)}
