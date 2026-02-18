@@ -46,8 +46,8 @@ export function FeaturedStocks({ stocks, onAdd }: FeaturedStocksProps) {
                     </span>
                   </div>
                 </div>
-                <div className="w-16 shrink-0 sm:w-20">
-                  <SparklineView data={stock.sparkline} isPositive={isPositive} height={28} />
+                <div className="h-8 w-16 shrink-0 sm:h-10 sm:w-20">
+                  <SparklineView data={stock.sparkline} isPositive={isPositive} height={32} />
                 </div>
               </div>
 

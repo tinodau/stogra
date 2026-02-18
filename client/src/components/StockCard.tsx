@@ -11,7 +11,7 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
 
   return (
     <div className="group border-border bg-card relative rounded-[var(--radius)] border p-4 shadow-sm transition-shadow hover:shadow-md">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
             <h3 className="font-mono text-base font-semibold tracking-tight sm:text-lg">
@@ -35,8 +35,8 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
           </div>
         </div>
 
-        <div className="w-20 shrink-0 sm:w-24">
-          <SparklineView data={stock.sparkline} isPositive={isPositive} height={40} />
+        <div className="h-12 w-24 shrink-0 sm:h-14 sm:w-32">
+          <SparklineView data={stock.sparkline} isPositive={isPositive} height={48} />
         </div>
 
         {onRemove && (

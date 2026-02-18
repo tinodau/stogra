@@ -201,6 +201,46 @@ interface WeekHighLow {
 
 ---
 
+## 2025-02-18 08:20 UTC: Sparkline Chart Fix
+
+### Issue
+
+The sparkline charts were asymmetrical and "floating" due to:
+
+- Fixed pixel width (`width={96}`) not matching container
+- SVG `overflow-visible` causing visual overflow
+- No responsive scaling
+
+### Solution
+
+Replaced fixed width with viewBox + responsive container:
+
+```tsx
+// Before: fixed width
+<svg width={96} height={40}>
+
+// After: viewBox + responsive
+<svg viewBox="0 0 100 48" preserveAspectRatio="none">
+```
+
+Container now controls size:
+
+```tsx
+<div className="h-12 w-24 shrink-0 sm:h-14 sm:w-32">
+  <SparklineView ... height={48} />
+</div>
+```
+
+### Key Changes
+
+| Component            | Change                                                              |
+| -------------------- | ------------------------------------------------------------------- |
+| `SparklineView.tsx`  | viewBox instead of fixed width, `vectorEffect="non-scaling-stroke"` |
+| `StockCard.tsx`      | Proper `h-12 w-24` container with `items-center` alignment          |
+| `FeaturedStocks.tsx` | Consistent `h-8 w-16` container sizing                              |
+
+---
+
 ## Session Log
 
 | Datetime             | Focus                   | Key Outcome                                                                 |
@@ -213,6 +253,8 @@ interface WeekHighLow {
 | 2025-02-18 07:35 UTC | AnalystRatings refactor | Converted to compact 3-column grid layout                                   |
 | 2025-02-18 07:45 UTC | Design system polish    | Tweakcn colors, primary contrast fix, border/shadow visibility              |
 | 2025-02-18 08:00 UTC | Mobile responsiveness   | Fixed horizontal scroll, consistent spacing, mobile-first all components    |
+| 2025-02-18 08:15 UTC | Hero/AnalystRatings fix | Centered indices, 2-column ratings grid                                     |
+| 2025-02-18 08:20 UTC | Sparkline fix           | Responsive viewBox, proper container sizing, consistent heights             |
 
 ---
 
