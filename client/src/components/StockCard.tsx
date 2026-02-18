@@ -9,39 +9,37 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
   const isPositive = stock.change >= 0;
 
   return (
-    <div className="group border-border bg-card relative flex items-center justify-between rounded-[var(--radius)] border p-4 shadow-sm transition-shadow hover:shadow-md">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline gap-2">
-          <h3 className="font-mono text-base font-semibold tracking-tight sm:text-lg">
-            {stock.symbol}
-          </h3>
-          <span className="text-muted-foreground truncate text-sm">{stock.name}</span>
-        </div>
-        <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="font-mono text-xl font-medium tabular-nums sm:text-2xl">
-            ${stock.price.toFixed(2)}
-          </span>
-          <span
-            className={`font-mono text-sm font-medium tabular-nums ${
-              isPositive ? "text-primary" : "text-destructive"
-            }`}
-          >
-            {isPositive ? "+" : ""}
-            {stock.change.toFixed(2)} ({isPositive ? "+" : ""}
-            {stock.change_percent.toFixed(2)}%)
-          </span>
-        </div>
+    <div className="group border-border bg-card flex items-center justify-between gap-2 rounded-md border px-3 py-2 sm:px-4 sm:py-2.5">
+      <div className="flex min-w-0 items-baseline gap-2">
+        <h3 className="font-mono text-sm font-semibold sm:text-base">{stock.symbol}</h3>
+        <span className="text-muted-foreground hidden truncate text-sm sm:inline">
+          {stock.name}
+        </span>
       </div>
 
-      {onRemove && (
-        <button
-          onClick={onRemove}
-          className="text-muted-foreground hover:bg-muted hover:text-foreground ml-4 rounded-md p-1.5 opacity-0 transition-opacity group-hover:opacity-100"
-          aria-label={`Remove ${stock.symbol}`}
+      <div className="flex items-baseline gap-2 sm:gap-3">
+        <span className="font-mono text-sm font-medium tabular-nums sm:text-base">
+          ${stock.price.toFixed(2)}
+        </span>
+        <span
+          className={`font-mono text-xs font-medium tabular-nums sm:text-sm ${
+            isPositive ? "text-primary" : "text-destructive"
+          }`}
         >
-          ×
-        </button>
-      )}
+          {isPositive ? "+" : ""}
+          {stock.change_percent.toFixed(2)}%
+        </span>
+
+        {onRemove && (
+          <button
+            onClick={onRemove}
+            className="text-muted-foreground hover:text-foreground ml-1 rounded p-0.5 text-lg leading-none opacity-0 transition-opacity group-hover:opacity-100"
+            aria-label={`Remove ${stock.symbol}`}
+          >
+            ×
+          </button>
+        )}
+      </div>
     </div>
   );
 }
