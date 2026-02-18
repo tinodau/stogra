@@ -299,7 +299,7 @@ Container now controls size:
 | 2025-02-18 08:15 UTC | Hero/AnalystRatings fix | Centered indices, 2-column ratings grid                                     |
 | 2025-02-18 08:20 UTC | Sparkline fix           | Responsive viewBox, proper container sizing, consistent heights             |
 | 2025-02-18 08:30 UTC | Stock list redesign     | Removed sparklines, table layout, logo + stacked mobile layout              |
-| 2025-02-18 08:45 UTC | yfinance adaptation    | Adapted types to yfinance capabilities, updated news/ratings structure       |
+| 2025-02-18 08:45 UTC | yfinance adaptation     | Adapted types to yfinance capabilities, updated news/ratings structure      |
 
 ---
 
@@ -312,23 +312,25 @@ Adapt mock data types to match yfinance capabilities.
 ### Changes Made
 
 **NewsItem type:**
+
 - Removed: `id`, `summary`, `sentiment`, `category`
 - Added: `link`
 - Renamed: `source` → `publisher`
 
 **AnalystRating.rating:**
+
 - Removed: `strong_buy`, `strong_sell`
 - Kept: `buy`, `hold`, `sell` (yfinance only provides these)
 
 ### yfinance Data Sources
 
-| Data | yfinance Method |
-|------|-----------------|
-| News | `ticker.news` |
-| Sector Performance | Sector ETFs (XLK, XLF, XLE, XLV, XLP) |
-| Market Status | Calculate from NYSE hours |
-| Analyst Ratings | `info["recommendationKey"]`, `info["targetMedianPrice"]` |
-| Earnings | `ticker.earnings_dates` |
+| Data               | yfinance Method                                          |
+| ------------------ | -------------------------------------------------------- |
+| News               | `ticker.news`                                            |
+| Sector Performance | Sector ETFs (XLK, XLF, XLE, XLV, XLP)                    |
+| Market Status      | Calculate from NYSE hours                                |
+| Analyst Ratings    | `info["recommendationKey"]`, `info["targetMedianPrice"]` |
+| Earnings           | `ticker.earnings_dates`                                  |
 
 ### Server Files Updated
 

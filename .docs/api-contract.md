@@ -102,6 +102,104 @@ Used by Koyeb to monitor deployment status.
 { "status": "operational", "version": "1.0.0" }
 ```
 
+### 2.5 Market Status
+
+Get current market status (open/closed) based on NYSE trading hours.
+
+- **Endpoint**: `GET /api/market/status`
+- **Response**: `200 OK`
+
+```json
+{
+  "isOpen": true,
+  "exchange": "NYSE",
+  "nextEvent": "close",
+  "countdown": "4h 23m",
+  "openTime": "9:30 AM ET",
+  "closeTime": "4:00 PM ET"
+}
+```
+
+### 2.6 Sector Performance
+
+Get sector performance calculated from sector ETFs.
+
+- **Endpoint**: `GET /api/market/sectors`
+- **Response**: `200 OK`
+
+```json
+[
+  { "name": "Technology", "change_percent": 1.24 },
+  { "name": "Finance", "change_percent": 0.52 },
+  { "name": "Energy", "change_percent": -0.78 },
+  { "name": "Healthcare", "change_percent": 0.35 },
+  { "name": "Consumer", "change_percent": -0.21 }
+]
+```
+
+### 2.7 Market News
+
+Get market news from yfinance.
+
+- **Endpoint**: `GET /api/market/news`
+- **Query Params**: `limit=[int]` (default: 6, max: 20)
+- **Response**: `200 OK`
+
+```json
+[
+  {
+    "title": "NVIDIA Surges on Record AI Chip Demand",
+    "publisher": "Reuters",
+    "link": "https://www.reuters.com/...",
+    "published_at": "2025-02-18T14:30:00Z",
+    "related_stocks": ["NVDA", "AMD"]
+  }
+]
+```
+
+### 2.8 Analyst Ratings
+
+Get analyst ratings and price targets.
+
+- **Endpoint**: `GET /api/market/ratings`
+- **Query Params**: `limit=[int]` (default: 6, max: 20)
+- **Response**: `200 OK`
+
+```json
+[
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "rating": "buy",
+    "rating_score": 4.8,
+    "target_price": 850.0,
+    "current_price": 726.13,
+    "upside_percent": 17.06,
+    "analyst_count": 42
+  }
+]
+```
+
+### 2.9 Earnings Calendar
+
+Get upcoming earnings dates.
+
+- **Endpoint**: `GET /api/market/earnings`
+- **Query Params**: `limit=[int]` (default: 8, max: 20)
+- **Response**: `200 OK`
+
+```json
+[
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "date": "Feb 21",
+    "time": "after_market",
+    "expected_eps": 4.59
+  }
+]
+```
+
 ## 3. Data Constraints
 
 - **Sparkline**: The sparkline array contains 7 to 24 data points representing the closing price trend (daily or hourly).
