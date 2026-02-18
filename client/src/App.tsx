@@ -2,8 +2,7 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { useStocks, useMarketSnapshot, useStocksBySector } from "@/hooks/useMarketData";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
-import { StockCard } from "@/components/StockCard";
-import { FeaturedStocks } from "@/components/FeaturedStocks";
+import { StockList } from "@/components/StockList";
 import { MarketNews } from "@/components/MarketNews";
 import { EarningsCalendar } from "@/components/EarningsCalendar";
 import { AnalystRatings } from "@/components/AnalystRatings";
@@ -14,7 +13,7 @@ import { MarketHours } from "@/components/MarketHours";
 import { SectorPerformance } from "@/components/SectorPerformance";
 import { EarningsMini } from "@/components/EarningsMini";
 import { Footer } from "@/components/Footer";
-import { SkeletonCard, SkeletonSidebarItem } from "@/components/SkeletonCard";
+import { SkeletonSidebarItem } from "@/components/SkeletonCard";
 
 function App() {
   const { watchlist, remove, add } = useWatchlist();
@@ -33,39 +32,37 @@ function App() {
           <main className="min-w-0 space-y-12">
             {watchlist.length > 0 ? (
               <section>
-                <div className="mb-6 flex items-center justify-between">
-                  <h2 className="font-serif text-2xl font-semibold">Watchlist</h2>
-                  <span className="text-muted-foreground text-sm">{watchlist.length} stocks</span>
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="font-serif text-xl font-semibold sm:text-2xl">Watchlist</h2>
+                  <span className="text-muted-foreground text-xs sm:text-sm">
+                    {watchlist.length} stocks
+                  </span>
                 </div>
 
                 {isLoading ? (
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     {Array.from({ length: 3 }).map((_, i) => (
-                      <SkeletonCard key={i} />
+                      <SkeletonSidebarItem key={i} />
                     ))}
                   </div>
                 ) : watchlistData && watchlistData.length > 0 ? (
-                  <div className="space-y-4">
-                    {watchlistData.map((stock) => (
-                      <StockCard
-                        key={stock.symbol}
-                        stock={stock}
-                        onRemove={() => remove(stock.symbol)}
-                      />
-                    ))}
-                  </div>
+                  <StockList stocks={watchlistData} onRemove={remove} />
                 ) : null}
               </section>
             ) : (
               <section>
+                <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <h2 className="font-serif text-lg font-semibold sm:text-xl">Trending Today</h2>
+                </div>
+
                 {featuredLoading ? (
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="space-y-2">
                     {Array.from({ length: 6 }).map((_, i) => (
-                      <SkeletonCard key={i} />
+                      <SkeletonSidebarItem key={i} />
                     ))}
                   </div>
                 ) : featuredStocks ? (
-                  <FeaturedStocks stocks={featuredStocks} onAdd={add} />
+                  <StockList stocks={featuredStocks} onAdd={add} />
                 ) : null}
               </section>
             )}
