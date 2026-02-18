@@ -22,29 +22,30 @@ export function Particles() {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width || window.innerWidth;
+      canvas.height = rect.height || 400;
       initParticles();
     };
 
     const initParticles = () => {
-      const particleCount = 50;
+      const particleCount = 60;
       particlesRef.current = [];
 
       for (let i = 0; i < particleCount; i++) {
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 1,
-          speedX: (Math.random() - 0.5) * 0.3,
-          speedY: -Math.random() * 0.5 - 0.1,
-          opacity: Math.random() * 0.1 + 0.05,
+          size: Math.random() * 2.5 + 1.5,
+          speedX: (Math.random() - 0.5) * 0.4,
+          speedY: -Math.random() * 0.6 - 0.2,
+          opacity: Math.random() * 0.15 + 0.08,
         });
       }
     };
 
     const isDark = document.documentElement.classList.contains("dark");
-    const particleColor = isDark ? "200, 200, 200" : "0, 0, 0";
+    const particleColor = isDark ? "150, 150, 150" : "50, 50, 50";
 
     const animate = () => {
       if (!ctx || !canvas) return;
@@ -82,11 +83,5 @@ export function Particles() {
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none absolute inset-0 h-full w-full"
-      style={{ opacity: 0.6 }}
-    />
-  );
+  return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />;
 }
