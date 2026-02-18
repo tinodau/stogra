@@ -4,16 +4,29 @@ Handles all interactions with Yahoo Finance API
 """
 
 import asyncio
-from datetime import datetime, time
-from typing import List, Dict, Any
+from datetime import datetime, time, timedelta
+from typing import List, Dict, Any, Optional
 import yfinance as yf
 import pytz
+from functools import lru_cache
+
+
+class CacheEntry:
+    def __init__(self, data: Any, ttl_seconds: int = 60):
+        self.data = data
+        self.expires_at = datetime.now() + timedelta(seconds=ttl_seconds)
+
+    def is_valid(self) -> bool:
+        return datetime.now() < self.expires_at
 
 
 class MarketDataService:
     """
     Service layer for fetching and processing market data from yfinance
     """
+
+    # In-memory cache
+    _cache: Dict[str, CacheEntry] = {}
 
     # Major indices we track
     INDICES = {
@@ -53,13 +66,46 @@ class MarketDataService:
     # Stocks with news (for fetching news)
     NEWS_SYMBOLS = ["NVDA", "AAPL", "TSLA", "META", "AMZN", "MSFT", "GOOGL"]
 
+    # Stock names cache (avoids slow info calls)
+    STOCK_NAMES = {
+        "AAPL": "Apple Inc.",
+        "MSFT": "Microsoft Corporation",
+        "GOOGL": "Alphabet Inc. Class A",
+        "AMZN": "Amazon.com Inc.",
+        "NVDA": "NVIDIA Corporation",
+        "META": "Meta Platforms Inc.",
+        "TSLA": "Tesla Inc.",
+        "BRK-B": "Berkshire Hathaway Inc.",
+        "UNH": "UnitedHealth Group Inc.",
+        "JNJ": "Johnson & Johnson",
+        "XOM": "Exxon Mobil Corporation",
+        "V": "Visa Inc.",
+        "JPM": "JPMorgan Chase & Co.",
+        "WMT": "Walmart Inc.",
+        "PG": "Procter & Gamble Co.",
+        "MA": "Mastercard Inc.",
+        "HD": "Home Depot Inc.",
+        "CVX": "Chevron Corporation",
+        "KO": "Coca-Cola Co.",
+        "PFE": "Pfizer Inc.",
+        "NFLX": "Netflix Inc.",
+        "AMD": "Advanced Micro Devices Inc.",
+        "ADBE": "Adobe Inc.",
+        "CRM": "Salesforce Inc.",
+        "INTC": "Intel Corporation",
+    }
+
+    def _get_cached(self, key: str) -> Optional[Any]:
+        entry = self._cache.get(key)
+        if entry and entry.is_valid():
+            return entry.data
+        return None
+
+    def _set_cached(self, key: str, data: Any, ttl_seconds: int = 60):
+        self._cache[key] = CacheEntry(data, ttl_seconds)
+
     async def search_tickers(self, query: str) -> List[Dict[str, str]]:
-        """
-        Search for tickers using yfinance
-        Note: yfinance doesn't have a direct search API, so we use a curated list
-        for common US equities
-        """
-        # Common US stocks for demo (in production, use a comprehensive dataset)
+        """Search for tickers using curated list"""
         common_stocks = [
             {
                 "symbol": "AAPL",
@@ -183,20 +229,14 @@ class MarketDataService:
                 "type": "Equity",
             },
             {
-                "symbol": "MRK",
-                "name": "Merck & Co.",
-                "exchange": "NYSE",
-                "type": "Equity",
-            },
-            {
-                "symbol": "CSCO",
-                "name": "Cisco Systems Inc.",
+                "symbol": "NFLX",
+                "name": "Netflix Inc.",
                 "exchange": "NASDAQ",
                 "type": "Equity",
             },
             {
-                "symbol": "NFLX",
-                "name": "Netflix Inc.",
+                "symbol": "AMD",
+                "name": "Advanced Micro Devices Inc.",
                 "exchange": "NASDAQ",
                 "type": "Equity",
             },
@@ -209,88 +249,89 @@ class MarketDataService:
         ]
 
         query_lower = query.lower()
-        results = [
+        return [
             stock
             for stock in common_stocks
             if query_lower in stock["symbol"].lower()
             or query_lower in stock["name"].lower()
         ]
 
-        return results
+    def _fetch_history_sync(self, symbol: str, period: str = "1mo") -> Any:
+        """Synchronous history fetch for thread executor"""
+        ticker = yf.Ticker(symbol)
+        return ticker.history(period=period, interval="1d", prepost=True)
 
-    async def get_stock_data(self, symbol: str) -> Dict[str, Any] | None:
-        """
-        Fetch current data for a single stock including sparkline
-        """
+    async def get_stock_data(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Fetch current data for a single stock including sparkline"""
+        cache_key = f"stock:{symbol}"
+        cached = self._get_cached(cache_key)
+        if cached:
+            return cached
+
         try:
-            ticker = yf.Ticker(symbol)
-            info = ticker.info
-            hist = ticker.history(period="5d", interval="1d")
+            # Run yfinance in thread pool to avoid blocking
+            loop = asyncio.get_event_loop()
+            hist = await loop.run_in_executor(None, self._fetch_history_sync, symbol)
 
-            if hist.empty:
+            if hist.empty or len(hist) == 0:
                 return None
 
-            # Calculate sparkline data (last 7-24 points)
+            # Get last 7 closing prices for sparkline
             closing_prices = hist["Close"].tolist()
             sparkline = (
                 closing_prices[-7:] if len(closing_prices) >= 7 else closing_prices
             )
 
-            # Current price and change
+            # Current price is the latest close (works even when market is closed)
             current_price = hist["Close"].iloc[-1]
-            prev_close = (
-                info.get("regularMarketPreviousClose") or hist["Close"].iloc[-2]
-                if len(hist) > 1
-                else current_price
-            )
+
+            # Previous close for change calculation
+            prev_close = hist["Close"].iloc[-2] if len(hist) > 1 else current_price
+
             change = current_price - prev_close
             change_percent = (change / prev_close) * 100 if prev_close else 0
 
-            return {
+            result = {
                 "symbol": symbol,
-                "name": info.get("longName", info.get("shortName", symbol)),
-                "price": round(current_price, 2),
-                "change": round(change, 2),
-                "change_percent": round(change_percent, 2),
-                "market_cap": info.get("marketCap"),
-                "sparkline": [round(p, 2) for p in sparkline],
-                "currency": info.get("currency", "USD"),
+                "name": self.STOCK_NAMES.get(symbol, symbol),
+                "price": round(float(current_price), 2),
+                "change": round(float(change), 2),
+                "change_percent": round(float(change_percent), 2),
+                "market_cap": None,
+                "sparkline": [round(float(p), 2) for p in sparkline],
+                "currency": "USD",
             }
+
+            self._set_cached(cache_key, result, ttl_seconds=30)
+            return result
+
         except Exception as e:
             print(f"Error fetching {symbol}: {e}")
             return None
 
     async def get_stocks_batch(self, symbols: List[str]) -> List[Dict[str, Any]]:
-        """
-        Fetch data for multiple stocks concurrently using asyncio.gather
-        """
+        """Fetch data for multiple stocks concurrently"""
         tasks = [self.get_stock_data(symbol) for symbol in symbols]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        results = await asyncio.gather(*tasks)
+        return [r for r in results if r is not None]
 
-        stocks = []
-        for result in results:
-            if isinstance(result, dict):
-                stocks.append(result)
-            elif result is not None:
-                print(f"Error in batch: {result}")
-
-        return stocks
-
-    async def get_stock_detail(self, symbol: str) -> Dict[str, Any] | None:
-        """
-        Get detailed data for a single stock (includes more data points)
-        """
+    async def get_stock_detail(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """Get detailed data for a single stock"""
         return await self.get_stock_data(symbol)
 
     async def get_index_data(self, symbol: str, name: str) -> Dict[str, Any]:
-        """
-        Fetch data for a market index
-        """
-        try:
-            ticker = yf.Ticker(symbol)
-            hist = ticker.history(period="2d", interval="1d")
+        """Fetch data for a market index"""
+        cache_key = f"index:{symbol}"
+        cached = self._get_cached(cache_key)
+        if cached:
+            return cached
 
-            if hist.empty:
+        try:
+            loop = asyncio.get_event_loop()
+            hist = await loop.run_in_executor(None, self._fetch_history_sync, symbol)
+
+            if hist.empty or len(hist) == 0:
+                # Return last known values from cache or zeros
                 return {
                     "symbol": symbol,
                     "name": name,
@@ -304,20 +345,27 @@ class MarketDataService:
                 ((current_price - prev_price) / prev_price) * 100 if prev_price else 0
             )
 
-            return {
+            result = {
                 "symbol": symbol,
                 "name": name,
-                "price": round(current_price, 2),
-                "change_percent": round(change_percent, 2),
+                "price": round(float(current_price), 2),
+                "change_percent": round(float(change_percent), 2),
             }
+
+            self._set_cached(cache_key, result, ttl_seconds=30)
+            return result
+
         except Exception as e:
             print(f"Error fetching index {symbol}: {e}")
             return {"symbol": symbol, "name": name, "price": 0.0, "change_percent": 0.0}
 
     async def get_market_snapshot(self) -> Dict[str, Any]:
-        """
-        Get full market snapshot: indices and top movers
-        """
+        """Get full market snapshot: indices and top movers"""
+        # Check cache first
+        cached = self._get_cached("market_snapshot")
+        if cached:
+            return cached
+
         # Fetch index data concurrently
         index_tasks = [
             self.get_index_data(symbol, name) for symbol, name in self.INDICES.items()
@@ -325,12 +373,12 @@ class MarketDataService:
         indices = await asyncio.gather(*index_tasks)
 
         # Fetch top stocks for movers
-        top_stocks = await self.get_stocks_batch(self.TOP_SYMBOLS[:15])
+        top_stocks = await self.get_stocks_batch(self.TOP_SYMBOLS[:10])
 
         # Sort by absolute change percentage to find movers
         movers = sorted(
             top_stocks, key=lambda x: abs(x.get("change_percent", 0)), reverse=True
-        )[:5]  # Top 5 movers
+        )[:5]
 
         # Format movers
         formatted_movers = [
@@ -343,40 +391,34 @@ class MarketDataService:
             for s in movers
         ]
 
-        return {
+        result = {
             "indices": list(indices),
             "top_movers": formatted_movers,
         }
 
+        self._set_cached("market_snapshot", result, ttl_seconds=30)
+        return result
+
     async def get_market_status(self) -> Dict[str, Any]:
-        """
-        Calculate market status (open/closed) based on NYSE hours
-        NYSE: 9:30 AM - 4:00 PM ET, Mon-Fri
-        """
+        """Calculate market status (open/closed) based on NYSE hours"""
         nyse = pytz.timezone("America/New_York")
         now = datetime.now(nyse)
 
-        # Check if weekday (0-4 = Mon-Fri)
         is_weekday = now.weekday() < 5
-
-        # Check if within trading hours
         market_open = time(9, 30)
         market_close = time(16, 0)
         current_time = now.time()
 
         is_open = is_weekday and market_open <= current_time < market_close
 
-        # Calculate countdown
         countdown = ""
         if is_open:
-            # Time until close
             close_dt = nyse.localize(datetime(now.year, now.month, now.day, 16, 0))
             diff = close_dt - now
             hours = int(diff.total_seconds() // 3600)
             minutes = int((diff.total_seconds() % 3600) // 60)
             countdown = f"{hours}h {minutes}m"
         elif is_weekday and current_time < market_open:
-            # Time until open
             open_dt = nyse.localize(datetime(now.year, now.month, now.day, 9, 30))
             diff = open_dt - now
             hours = int(diff.total_seconds() // 3600)
@@ -393,17 +435,19 @@ class MarketDataService:
         }
 
     async def get_sector_performance(self) -> List[Dict[str, Any]]:
-        """
-        Calculate sector performance from sector ETF prices
-        """
-        results = []
+        """Calculate sector performance from sector ETF prices"""
+        cached = self._get_cached("sectors")
+        if cached:
+            return cached
 
         async def get_sector_change(
             sector_name: str, etf_symbol: str
         ) -> Dict[str, Any]:
             try:
-                ticker = yf.Ticker(etf_symbol)
-                hist = ticker.history(period="2d", interval="1d")
+                loop = asyncio.get_event_loop()
+                hist = await loop.run_in_executor(
+                    None, self._fetch_history_sync, etf_symbol
+                )
 
                 if len(hist) >= 2:
                     current = hist["Close"].iloc[-1]
@@ -412,7 +456,10 @@ class MarketDataService:
                 else:
                     change_percent = 0.0
 
-                return {"name": sector_name, "change_percent": round(change_percent, 2)}
+                return {
+                    "name": sector_name,
+                    "change_percent": round(float(change_percent), 2),
+                }
             except Exception as e:
                 print(f"Error fetching sector {sector_name}: {e}")
                 return {"name": sector_name, "change_percent": 0.0}
@@ -421,21 +468,24 @@ class MarketDataService:
             get_sector_change(name, symbol) for name, symbol in self.SECTOR_ETFS.items()
         ]
         results = await asyncio.gather(*tasks)
+
+        self._set_cached("sectors", list(results), ttl_seconds=60)
         return list(results)
 
     async def get_news(self, limit: int = 6) -> List[Dict[str, Any]]:
-        """
-        Fetch news from yfinance for tracked symbols
-        """
+        """Fetch news from yfinance for tracked symbols"""
+        cached = self._get_cached("news")
+        if cached:
+            return cached[:limit]
+
         all_news = []
 
-        for symbol in self.NEWS_SYMBOLS[:3]:  # Limit to avoid too many requests
+        for symbol in self.NEWS_SYMBOLS[:3]:
             try:
                 ticker = yf.Ticker(symbol)
                 news_items = ticker.news or []
 
-                for item in news_items[:2]:  # Max 2 per symbol
-                    # Convert timestamp to ISO string
+                for item in news_items[:2]:
                     pub_time = item.get("providerPublishTime", 0)
                     published_at = (
                         datetime.utcfromtimestamp(pub_time).isoformat() + "Z"
@@ -455,18 +505,20 @@ class MarketDataService:
             except Exception as e:
                 print(f"Error fetching news for {symbol}: {e}")
 
-        # Sort by published_at (newest first) and limit
         all_news.sort(key=lambda x: x.get("published_at", ""), reverse=True)
+        self._set_cached("news", all_news, ttl_seconds=300)
         return all_news[:limit]
 
     async def get_analyst_ratings(
         self, symbols: List[str] = None, limit: int = 6
     ) -> List[Dict[str, Any]]:
-        """
-        Fetch analyst ratings from yfinance info
-        """
+        """Fetch analyst ratings from yfinance info"""
         if symbols is None:
             symbols = self.TOP_SYMBOLS[:6]
+
+        cached = self._get_cached("ratings")
+        if cached:
+            return cached[:limit]
 
         results = []
 
@@ -475,9 +527,7 @@ class MarketDataService:
                 ticker = yf.Ticker(symbol)
                 info = ticker.info
 
-                # Map yfinance recommendationKey to our rating
                 rec_key = info.get("recommendationKey", "hold")
-                # yfinance only returns: buy, hold, sell
                 rating_map = {
                     "strong_buy": "buy",
                     "buy": "buy",
@@ -487,7 +537,6 @@ class MarketDataService:
                 }
                 rating = rating_map.get(rec_key, "hold")
 
-                # Rating score (1-5 scale)
                 score_map = {"buy": 4.5, "hold": 3.0, "sell": 2.0}
                 rating_score = score_map.get(rating, 3.0)
 
@@ -505,38 +554,38 @@ class MarketDataService:
                 results.append(
                     {
                         "symbol": symbol,
-                        "name": info.get("longName") or info.get("shortName") or symbol,
+                        "name": self.STOCK_NAMES.get(symbol, symbol),
                         "rating": rating,
                         "rating_score": rating_score,
-                        "target_price": round(target_price, 2),
-                        "current_price": round(current_price, 2),
-                        "upside_percent": round(upside, 2),
+                        "target_price": round(float(target_price), 2),
+                        "current_price": round(float(current_price), 2),
+                        "upside_percent": round(float(upside), 2),
                         "analyst_count": info.get("numberOfAnalystOpinions") or 0,
                     }
                 )
             except Exception as e:
                 print(f"Error fetching ratings for {symbol}: {e}")
 
-        # Sort by rating_score (best first)
         results.sort(key=lambda x: x.get("rating_score", 0), reverse=True)
+        self._set_cached("ratings", results, ttl_seconds=300)
         return results[:limit]
 
     async def get_earnings(self, limit: int = 8) -> List[Dict[str, Any]]:
-        """
-        Fetch upcoming earnings dates from yfinance calendar
-        """
+        """Fetch upcoming earnings dates from yfinance calendar"""
+        cached = self._get_cached("earnings")
+        if cached:
+            return cached[:limit]
+
         earnings = []
 
         for symbol in self.TOP_SYMBOLS[:10]:
             try:
                 ticker = yf.Ticker(symbol)
-
-                # Get earnings dates
                 earnings_dates = ticker.earnings_dates
+
                 if earnings_dates is None or earnings_dates.empty:
                     continue
 
-                # Get upcoming earnings (future dates)
                 now = datetime.now()
                 upcoming = earnings_dates[earnings_dates.index > now]
 
@@ -544,28 +593,22 @@ class MarketDataService:
                     next_earning = upcoming.iloc[0]
                     earnings_date = upcoming.index[0]
 
-                    # Determine time (before/after market)
-                    # yfinance doesn't provide this, default to after_market
-                    earnings_time = "after_market"
-
                     earnings.append(
                         {
                             "symbol": symbol,
-                            "name": ticker.info.get("longName")
-                            or ticker.info.get("shortName")
-                            or symbol,
+                            "name": self.STOCK_NAMES.get(symbol, symbol),
                             "date": earnings_date.strftime("%b %d"),
-                            "time": earnings_time,
+                            "time": "after_market",
                             "expected_eps": next_earning.get("EPS Estimate") or None,
                         }
                     )
             except Exception as e:
                 print(f"Error fetching earnings for {symbol}: {e}")
 
-        # Sort by date
         earnings.sort(
             key=lambda x: (
                 datetime.strptime(x["date"], "%b %d") if x["date"] else datetime.max
             )
         )
+        self._set_cached("earnings", earnings, ttl_seconds=3600)
         return earnings[:limit]
