@@ -44,46 +44,48 @@ export function MarketNews() {
   if (!news || news.length === 0) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-2xl font-semibold">Market News</h2>
-        <span className="text-muted-foreground text-sm">Latest updates</span>
+        <h2 className="font-serif text-xl font-semibold sm:text-2xl">Market News</h2>
+        <span className="text-muted-foreground text-xs sm:text-sm">Latest updates</span>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {news.map((item) => (
           <article
             key={item.id}
-            className="border-border bg-card hover:border-muted-foreground/20 rounded-(--radius) border p-4 transition-colors"
+            className="border-border bg-card hover:border-muted-foreground/20 rounded-(--radius) border p-3 transition-colors sm:p-4"
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0 flex-1">
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <CategoryBadge category={item.category} />
-                  <NewsSentimentIcon sentiment={item.sentiment} />
-                </div>
-                <h3 className="text-foreground leading-snug font-medium">{item.title}</h3>
-                <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">{item.summary}</p>
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
-                  <span className="text-muted-foreground">{item.source}</span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="text-muted-foreground">{item.published_at}</span>
-                  {item.related_stocks.length > 0 && (
-                    <>
-                      <span className="text-muted-foreground">•</span>
-                      <div className="flex gap-1">
-                        {item.related_stocks.map((symbol) => (
-                          <span
-                            key={symbol}
-                            className="bg-muted rounded px-1.5 py-0.5 font-mono font-medium"
-                          >
-                            {symbol}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <CategoryBadge category={item.category} />
+                <NewsSentimentIcon sentiment={item.sentiment} />
+              </div>
+              <h3 className="text-foreground text-sm leading-snug font-medium sm:text-base">
+                {item.title}
+              </h3>
+              <p className="text-muted-foreground mt-1 line-clamp-2 text-xs sm:text-sm">
+                {item.summary}
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-xs sm:mt-3 sm:gap-3">
+                <span className="text-muted-foreground">{item.source}</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">{item.published_at}</span>
+                {item.related_stocks.length > 0 && (
+                  <>
+                    <span className="text-muted-foreground">•</span>
+                    <div className="flex gap-1">
+                      {item.related_stocks.map((symbol) => (
+                        <span
+                          key={symbol}
+                          className="bg-muted rounded px-1.5 py-0.5 font-mono text-xs font-medium"
+                        >
+                          {symbol}
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </article>

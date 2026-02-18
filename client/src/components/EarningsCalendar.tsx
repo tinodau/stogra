@@ -24,7 +24,55 @@ export function EarningsCalendar() {
         <span className="text-muted-foreground text-sm">Upcoming</span>
       </div>
 
-      <div className="border-border overflow-hidden rounded-(--radius) border">
+      {/* Mobile: Card layout */}
+      <div className="grid gap-3 sm:hidden">
+        {earnings.map((earning, index) => (
+          <div
+            key={`${earning.symbol}-${index}`}
+            className="border-border bg-card rounded-(--radius) border p-4"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono font-semibold">{earning.symbol}</span>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs ${
+                      earning.time === "before_market"
+                        ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                        : earning.time === "after_market"
+                          ? "bg-purple-500/10 text-purple-600 dark:text-purple-400"
+                          : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {earning.time === "before_market"
+                      ? "Pre"
+                      : earning.time === "after_market"
+                        ? "After"
+                        : "During"}
+                  </span>
+                </div>
+                <span className="text-muted-foreground mt-1 block truncate text-xs">
+                  {earning.name}
+                </span>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="text-muted-foreground h-4 w-4" />
+                  <span className="font-medium">{earning.date}</span>
+                </div>
+                {earning.expected_eps && (
+                  <span className="text-muted-foreground mt-1 block text-xs">
+                    EPS: ${earning.expected_eps.toFixed(2)}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet+: Table layout */}
+      <div className="border-border hidden overflow-x-auto rounded-(--radius) border sm:block">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>
@@ -47,9 +95,11 @@ export function EarningsCalendar() {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <div>
+                  <div className="min-w-0">
                     <span className="font-mono font-semibold">{earning.symbol}</span>
-                    <span className="text-muted-foreground ml-2 text-xs">{earning.name}</span>
+                    <span className="text-muted-foreground ml-2 hidden text-xs lg:inline">
+                      {earning.name}
+                    </span>
                   </div>
                 </td>
                 <td className="px-4 py-3">

@@ -170,6 +170,37 @@ interface WeekHighLow {
 
 ---
 
+## 2025-02-18 08:00 UTC: Mobile Responsiveness Fix
+
+### Issues Fixed
+
+| Issue                     | Solution                                                       |
+| ------------------------- | -------------------------------------------------------------- |
+| Horizontal scroll         | Added `overflow-x-hidden` to root div, `min-w-0` to main/aside |
+| Inconsistent padding      | Made all containers use `w-full px-4` consistently             |
+| Earnings table cramped    | Mobile: card layout with 2-row info, Tablet+: scrollable table |
+| Section spacing too large | Reduced `space-y-6` to `space-y-4` on mobile                   |
+
+### Mobile-First Approach
+
+- All components now start with mobile styles, scale up with `sm:`, `md:`, `lg:` breakpoints
+- Font sizes, padding, gaps all reduced on mobile
+- Tables replaced with card layouts on mobile
+- Text truncated with `truncate` class where needed
+
+### Files Modified
+
+- `App.tsx` - Added `overflow-x-hidden`, `min-w-0`, consistent spacing
+- `HeroSection.tsx` - Mobile-first headline, stats grid, badge sizing
+- `EarningsCalendar.tsx` - Dual layout (mobile cards, tablet+ table)
+- `StockCard.tsx` - Reduced sizes, gap fixes
+- `FeaturedStocks.tsx` - Mobile grid, smaller text
+- `MarketNews.tsx` - Smaller text, tighter spacing
+- `AnalystRatings.tsx` - Mobile grid, compact rating labels
+- `DividendStocks.tsx` - Mobile grid, reduced padding
+
+---
+
 ## Session Log
 
 | Datetime             | Focus                   | Key Outcome                                                                 |
@@ -181,6 +212,7 @@ interface WeekHighLow {
 | 2025-02-18 07:25 UTC | Content expansion       | Added MarketNews, EarningsCalendar, AnalystRatings, DividendStocks          |
 | 2025-02-18 07:35 UTC | AnalystRatings refactor | Converted to compact 3-column grid layout                                   |
 | 2025-02-18 07:45 UTC | Design system polish    | Tweakcn colors, primary contrast fix, border/shadow visibility              |
+| 2025-02-18 08:00 UTC | Mobile responsiveness   | Fixed horizontal scroll, consistent spacing, mobile-first all components    |
 
 ---
 

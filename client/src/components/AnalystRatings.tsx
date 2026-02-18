@@ -11,12 +11,12 @@ const RATING_COLORS: Record<AnalystRating["rating"], { bg: string; text: string 
   strong_sell: { bg: "bg-destructive", text: "text-destructive" },
 };
 
-const RATING_LABELS: Record<AnalystRating["rating"], string> = {
-  strong_buy: "Strong Buy",
+const RATING_SHORT: Record<AnalystRating["rating"], string> = {
+  strong_buy: "Buy",
   buy: "Buy",
   hold: "Hold",
   sell: "Sell",
-  strong_sell: "Strong Sell",
+  strong_sell: "Sell",
 };
 
 export function AnalystRatings() {
@@ -24,7 +24,7 @@ export function AnalystRatings() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
@@ -37,13 +37,13 @@ export function AnalystRatings() {
   const sortedRatings = [...ratings].sort((a, b) => b.rating_score - a.rating_score);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-2xl font-semibold">Analyst Ratings</h2>
-        <span className="text-muted-foreground text-sm">Consensus</span>
+        <h2 className="font-serif text-xl font-semibold sm:text-2xl">Analyst Ratings</h2>
+        <span className="text-muted-foreground text-xs sm:text-sm">Consensus</span>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {sortedRatings.map((rating) => {
           const style = RATING_COLORS[rating.rating];
           const isPositive = rating.upside_percent > 0;
@@ -51,25 +51,29 @@ export function AnalystRatings() {
           return (
             <div
               key={rating.symbol}
-              className="border-border bg-card rounded-(--radius) border p-4"
+              className="border-border bg-card rounded-(--radius) border p-3 sm:p-4"
             >
-              <div className="mb-3 flex items-start justify-between">
-                <div>
-                  <span className="font-mono font-semibold">{rating.symbol}</span>
-                  <span className="text-muted-foreground block text-xs">{rating.name}</span>
-                </div>
-                <div className="text-right">
-                  <span className={`font-mono text-lg font-semibold ${style.text}`}>
-                    {RATING_LABELS[rating.rating]}
+              <div className="mb-2 flex items-start justify-between gap-2 sm:mb-3">
+                <div className="min-w-0">
+                  <span className="font-mono text-sm font-semibold sm:text-base">
+                    {rating.symbol}
                   </span>
-                  <span className="text-muted-foreground block text-xs">
+                  <span className="text-muted-foreground mt-0.5 block truncate text-xs">
+                    {rating.name}
+                  </span>
+                </div>
+                <div className="shrink-0 text-right">
+                  <span className={`font-mono text-sm font-semibold sm:text-lg ${style.text}`}>
+                    {RATING_SHORT[rating.rating]}
+                  </span>
+                  <span className="text-muted-foreground block text-[10px] sm:text-xs">
                     {rating.analyst_count} analysts
                   </span>
                 </div>
               </div>
 
-              <div className="mb-3">
-                <div className="bg-muted h-2 w-full overflow-hidden rounded-full">
+              <div className="mb-2 sm:mb-3">
+                <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full sm:h-2">
                   <div
                     className={`h-full rounded-full transition-all ${style.bg}`}
                     style={{ width: `${(rating.rating_score / 5) * 100}%` }}
@@ -77,23 +81,23 @@ export function AnalystRatings() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <div className="text-muted-foreground flex items-center gap-1">
-                  <Target className="h-3.5 w-3.5" />
+                  <Target className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>Target</span>
                 </div>
                 <span className="font-mono">${rating.target_price}</span>
               </div>
 
-              <div className="mt-2 flex items-center justify-between text-sm">
+              <div className="mt-1.5 flex items-center justify-between text-xs sm:mt-2 sm:text-sm">
                 <span className="text-muted-foreground">Upside</span>
                 <div
-                  className={`flex items-center gap-1 font-mono ${isPositive ? "text-primary" : "text-destructive"}`}
+                  className={`flex items-center gap-0.5 font-mono sm:gap-1 ${isPositive ? "text-primary" : "text-destructive"}`}
                 >
                   {isPositive ? (
-                    <TrendingUp className="h-3.5 w-3.5" />
+                    <TrendingUp className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   ) : (
-                    <TrendingDown className="h-3.5 w-3.5" />
+                    <TrendingDown className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   )}
                   {isPositive ? "+" : ""}
                   {rating.upside_percent.toFixed(1)}%

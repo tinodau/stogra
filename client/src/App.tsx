@@ -23,14 +23,14 @@ function App() {
   const { data: featuredStocks, isLoading: featuredLoading } = useStocksBySector("all");
 
   return (
-    <div className="bg-background flex min-h-screen flex-col font-sans antialiased">
+    <div className="bg-background flex min-h-screen flex-col overflow-x-hidden font-sans antialiased">
       <Navbar />
 
       <HeroSection onAddStock={add} />
 
-      <div className="container mx-auto flex-1 px-4 py-8">
+      <div className="container mx-auto w-full flex-1 px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-          <main className="space-y-12">
+          <main className="min-w-0 space-y-12">
             {watchlist.length > 0 ? (
               <section>
                 <div className="mb-6 flex items-center justify-between">
@@ -87,7 +87,7 @@ function App() {
             </section>
           </main>
 
-          <aside className="space-y-6">
+          <aside className="min-w-0 space-y-4 sm:space-y-6">
             <MarketHours />
 
             <div className="border-border bg-card rounded-(--radius) border p-4">

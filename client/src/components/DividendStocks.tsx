@@ -7,7 +7,7 @@ export function DividendStocks() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
@@ -20,39 +20,44 @@ export function DividendStocks() {
   const sortedDividends = [...dividends].sort((a, b) => b.dividend_yield - a.dividend_yield);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-2xl font-semibold">Top Dividend Stocks</h2>
-        <span className="text-muted-foreground text-sm">Highest yields</span>
+        <h2 className="font-serif text-xl font-semibold sm:text-2xl">Top Dividend Stocks</h2>
+        <span className="text-muted-foreground text-xs sm:text-sm">Highest yields</span>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {sortedDividends.map((stock) => (
-          <div key={stock.symbol} className="border-border bg-card rounded-(--radius) border p-4">
-            <div className="mb-3 flex items-start justify-between">
-              <div>
-                <span className="font-mono font-semibold">{stock.symbol}</span>
-                <span className="text-muted-foreground block text-xs">{stock.name}</span>
+          <div
+            key={stock.symbol}
+            className="border-border bg-card rounded-(--radius) border p-3 sm:p-4"
+          >
+            <div className="mb-2 flex items-start justify-between gap-2 sm:mb-3">
+              <div className="min-w-0">
+                <span className="font-mono text-sm font-semibold sm:text-base">{stock.symbol}</span>
+                <span className="text-muted-foreground mt-0.5 block truncate text-xs">
+                  {stock.name}
+                </span>
               </div>
-              <div className="text-right">
-                <span className="text-primary font-mono text-lg font-semibold">
+              <div className="shrink-0 text-right">
+                <span className="text-primary font-mono text-base font-semibold sm:text-lg">
                   {stock.dividend_yield.toFixed(2)}%
                 </span>
-                <span className="text-muted-foreground block text-xs">Yield</span>
+                <span className="text-muted-foreground block text-[10px] sm:text-xs">Yield</span>
               </div>
             </div>
 
-            <div className="space-y-2 text-sm">
+            <div className="space-y-1.5 text-xs sm:space-y-2 sm:text-sm">
               <div className="flex items-center justify-between">
                 <div className="text-muted-foreground flex items-center gap-1">
-                  <Banknote className="h-3.5 w-3.5" />
+                  <Banknote className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>Annual</span>
                 </div>
                 <span className="font-mono">${stock.annual_dividend.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-muted-foreground flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                   <span>Ex-Div</span>
                 </div>
                 <span className="font-mono text-xs">{stock.ex_dividend_date}</span>

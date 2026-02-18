@@ -11,14 +11,16 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
 
   return (
     <div className="group border-border bg-card relative rounded-[var(--radius)] border p-4 shadow-sm transition-shadow hover:shadow-md">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <h3 className="font-mono text-lg font-semibold tracking-tight">{stock.symbol}</h3>
+            <h3 className="font-mono text-base font-semibold tracking-tight sm:text-lg">
+              {stock.symbol}
+            </h3>
             <span className="text-muted-foreground truncate text-sm">{stock.name}</span>
           </div>
-          <div className="mt-2 flex items-baseline gap-3">
-            <span className="font-mono text-2xl font-medium tabular-nums">
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-mono text-xl font-medium tabular-nums sm:text-2xl">
               ${stock.price.toFixed(2)}
             </span>
             <span
@@ -33,14 +35,14 @@ export function StockCard({ stock, onRemove }: StockCardProps) {
           </div>
         </div>
 
-        <div className="ml-4 w-24">
+        <div className="w-20 shrink-0 sm:w-24">
           <SparklineView data={stock.sparkline} isPositive={isPositive} height={40} />
         </div>
 
         {onRemove && (
           <button
             onClick={onRemove}
-            className="text-muted-foreground hover:bg-muted hover:text-foreground ml-2 rounded-md p-1.5 opacity-0 transition-opacity group-hover:opacity-100"
+            className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-md p-1.5 opacity-0 transition-opacity group-hover:opacity-100"
             aria-label={`Remove ${stock.symbol}`}
           >
             ×

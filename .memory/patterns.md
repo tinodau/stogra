@@ -215,3 +215,72 @@ except Exception as e:
     print(f"Error fetching {symbol}: {e}")
     return None
 ```
+
+---
+
+## Mobile-First Responsive Patterns
+
+### Breakpoint Convention
+
+| Breakpoint | Min Width | Usage                        |
+| ---------- | --------- | ---------------------------- |
+| Default    | 0px       | Mobile (always define first) |
+| `sm:`      | 640px     | Large phones, tablets        |
+| `md:`      | 768px     | Tablets                      |
+| `lg:`      | 1024px    | Desktop                      |
+
+### Mobile-First Class Pattern
+
+Always start with mobile styles, scale up:
+
+```tsx
+// Mobile-first sizing
+className = "text-sm sm:text-base lg:text-lg";
+className = "p-3 sm:p-4 lg:p-6";
+className = "gap-3 sm:gap-4 lg:gap-6";
+```
+
+### Layout Overflow Prevention
+
+Prevent horizontal scroll on all containers:
+
+```tsx
+// Root container
+<div className="overflow-x-hidden">
+
+// Main content columns
+<main className="min-w-0">
+<aside className="min-w-0">
+```
+
+### Table on Mobile
+
+Tables should become cards on mobile:
+
+```tsx
+// Mobile: card layout
+<div className="grid gap-3 sm:hidden">
+  {items.map(item => <Card key={item.id} item={item} />)}
+</div>
+
+// Tablet+: table layout
+<div className="hidden sm:block overflow-x-auto">
+  <table>...</table>
+</div>
+```
+
+### Text Truncation
+
+Prevent text overflow with truncation:
+
+```tsx
+<span className="truncate">{longName}</span>
+<span className="max-w-[100px] truncate">{name}</span>
+```
+
+### Grid Responsiveness
+
+```tsx
+// 1 col mobile, 2 cols tablet, 3 cols desktop
+<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+```
