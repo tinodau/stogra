@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { SearchBar } from "./SearchBar";
-import { TickerMarquee } from "./TickerMarquee";
+import { Particles } from "./Particles";
 import { useMarketStatus, useMarketSnapshot } from "@/hooks/useMarketData";
 import { SkeletonSidebarItem } from "./SkeletonCard";
 
@@ -18,7 +18,7 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
 
   return (
     <section className="bg-muted/30 relative w-full overflow-hidden py-8 lg:py-16">
-      <TickerMarquee />
+      <Particles />
 
       <div className="relative z-10 container mx-auto w-full px-4">
         {status && (
