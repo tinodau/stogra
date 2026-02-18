@@ -4,7 +4,6 @@ Application configuration using Pydantic Settings
 
 from typing import List
 
-from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -14,22 +13,14 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api"
     PROJECT_NAME: str = "Stogra API"
 
-    ALLOWED_ORIGINS: List[str] = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "https://*.pages.dev",
-    ]
+    ALLOWED_ORIGINS_STR: str = "http://localhost:5173,http://localhost:3000,http://localhost:8000,https://*.pages.dev"
 
     ENV: str = "development"
     DEBUG: bool = True
 
-    @field_validator("ALLOWED_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    @property
+    def ALLOWED_ORIGINS(self) -> List[str]:
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS_STR.split(",")]
 
     class Config:
         env_file = ".env"
