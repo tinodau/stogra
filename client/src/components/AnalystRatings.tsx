@@ -24,7 +24,7 @@ export function AnalystRatings() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
@@ -43,7 +43,7 @@ export function AnalystRatings() {
         <span className="text-muted-foreground text-xs sm:text-sm">Consensus</span>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         {sortedRatings.map((rating) => {
           const style = RATING_COLORS[rating.rating];
           const isPositive = rating.upside_percent > 0;

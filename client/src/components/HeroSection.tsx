@@ -60,15 +60,15 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
                       key={index.symbol}
                       className="border-border bg-card rounded-(--radius) border px-2 py-2 sm:px-4 sm:py-3 lg:px-6"
                     >
-                      <span className="text-muted-foreground block truncate text-[10px] font-medium sm:text-xs">
+                      <span className="text-muted-foreground block text-center text-[10px] font-medium sm:text-xs">
                         {index.name}
                       </span>
-                      <div className="mt-0.5 flex items-center gap-1 sm:mt-1 sm:gap-2">
+                      <div className="mt-0.5 text-center sm:mt-1">
                         <span className="font-mono text-sm font-semibold sm:text-base lg:text-lg">
                           {index.price.toLocaleString()}
                         </span>
-                        <span
-                          className={`hidden items-center gap-0.5 font-mono text-[10px] sm:flex sm:text-xs ${
+                        <div
+                          className={`mt-0.5 flex items-center justify-center gap-0.5 font-mono text-[10px] sm:text-xs ${
                             isPositive ? "text-primary" : "text-destructive"
                           }`}
                         >
@@ -79,7 +79,7 @@ export function HeroSection({ onAddStock }: HeroSectionProps) {
                           )}
                           {isPositive ? "+" : ""}
                           {index.change_percent.toFixed(2)}%
-                        </span>
+                        </div>
                       </div>
                     </div>
                   );
