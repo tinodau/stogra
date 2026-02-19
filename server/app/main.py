@@ -93,6 +93,33 @@ class EarningEvent(BaseModel):
     expected_eps: float | None
 
 
+class DividendStock(BaseModel):
+    symbol: str
+    name: str
+    price: float
+    dividend_yield: float
+    annual_dividend: float
+    payout_frequency: str
+    ex_dividend_date: str
+
+
+class FeaturedNews(BaseModel):
+    title: str
+    symbol: str
+    summary: str
+
+
+class WeekHighLow(BaseModel):
+    symbol: str
+    name: str
+    price: float
+    week_high: float
+    week_low: float
+    percent_from_high: float
+    is_new_high: bool
+    is_new_low: bool
+
+
 class HealthStatus(BaseModel):
     status: str
     version: str
@@ -279,4 +306,48 @@ async def get_earnings(limit: int = Query(8, ge=1, le=20)) -> List[EarningEvent]
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to fetch earnings: {str(e)}"
+        )
+
+
+@app.get("/api/market/dividends", response_model=List[DividendStock])
+async def get_dividend_stocks(
+    limit: int = Query(6, ge=1, le=20),
+) -> List[DividendStock]:
+    """
+    Get dividend-paying stocks sorted by yield
+    """
+    try:
+        dividends = await market_service.get_dividend_stocks(limit)
+        return dividends
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch dividend stocks: {str(e)}"
+        )
+
+
+@app.get("/api/market/news/featured", response_model=FeaturedNews)
+async def get_featured_news() -> FeaturedNews:
+    """
+    Get featured news story
+    """
+    try:
+        featured = await market_service.get_featured_news()
+        return featured
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch featured news: {str(e)}"
+        )
+
+
+@app.get("/api/market/week-highs-lows")
+async def get_week_highs_lows():
+    """
+    Get 52-week highs and lows
+    """
+    try:
+        data = await market_service.get_week_highs_lows()
+        return data
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch week highs/lows: {str(e)}"
         )
